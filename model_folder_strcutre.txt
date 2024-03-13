@@ -1,0 +1,49 @@
+project_name/
+│
+├── app/
+│   ├── __init__.py
+│   ├── main.py               # Main FastAPI application
+│   ├── models/               # SQLAlchemy models
+│   │   ├── __init__.py
+│   │   ├── user.py           # User model
+│   │   └── ...
+│   │
+│   ├── schemas/              # Pydantic schemas
+│   │   ├── __init__.py
+│   │   ├── user.py           # User schema
+│   │   └── ...
+│   │
+│   ├── routes/               # API route definitions
+│   │   ├── __init__.py
+│   │   ├── user.py           # User routes
+│   │   └── ...
+│   │
+│   ├── services/             # Business logic services
+│   │   ├── __init__.py
+│   │   ├── user_service.py   # User service
+│   │   └── ...
+│   │
+│   └── utils/                # Utility functions
+│       ├── __init__.py
+│       ├── auth.py           # Authentication utilities
+│       └── ...
+│
+├── migrations/               # Database migrations (if using SQLAlchemy)
+│
+├── tests/                     # Unit and integration tests
+│   ├── __init__.py
+│   ├── test_main.py
+│   ├── test_routes/
+│   │   ├── __init__.py
+│   │   ├── test_user.py
+│   │   └── ...
+│   │
+│   └── test_services/
+│       ├── __init__.py
+│       ├── test_user_service.py
+│       └── ...
+│
+├── .env                       # Environment variables
+├── alembic.ini                # Alembic configuration (if using SQLAlchemy)
+├── requirements.txt           # Python dependencies
+└── README.md                  # Project documentation
