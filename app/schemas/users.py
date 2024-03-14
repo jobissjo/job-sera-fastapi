@@ -11,5 +11,5 @@ class User(Base):
     email = Column(String, index=True)
     full_name = Column(String)
     hashed_password = Column(String)
-    disabled = Column(Boolean, default=False)
+    active = Column(Boolean, default=False)
     role = Column(String, default="user")

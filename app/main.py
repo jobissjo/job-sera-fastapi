@@ -1,42 +1,27 @@
-from typing import Dict
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from pydantic import BaseModel
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
 from jose import JWTError, jwt
-import schemas
+from app.schemas.users import User, Base
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
+from app.models.users import TokenModel, TokenData, CreateUserModel, UserModel
+import datetime as dt
+
 
 SECRET_KEY = "hdhfh5jdnb7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./job-sera.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./db/job-sera.db"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
-schemas.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
 
-class TokenData(BaseModel):
-    username: str | None = None
-
-class UserModel(BaseModel):
-
-    username: str
-    email: str
-    full_name: str
-    disabled: bool = True
-    role: str = "user"
-
-class CreateUserModel(UserModel):
-    password: str
 
 
 
@@ -59,10 +44,10 @@ def get_password_hash(password: str):
     return pwd_context.hash(password)
 
 def get_user(db, username: str):
-    return db.query(schemas.User).filter(schemas.User.username == username).first()
+    return db.query(User).filter(User.username == username).first()
 
 def get_email(db, email: str):
-    return db.query(schemas.User).filter(schemas.User.email == email).first()
+    return db.query(User).filter(User.email == email).first()
 
 def authenticate_user(db, username: str, password: str):
     user = get_user(db, username)
@@ -75,9 +60,9 @@ def authenticate_user(db, username: str, password: str):
 def create_access_token(data: dict, expires_delta:timedelta | None = None):
     to_encode = data.copy()
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(dt.UTC) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.now(dt.UTC) + timedelta(minutes=15)
 
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
@@ -103,9 +88,11 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
     return user
 
 async def get_current_active_user(current_user: UserModel = Depends(get_current_user)):
-    if current_user.disabled:
+    if not current_user.active:
         raise HTTPException(status_code=400, detail="Inactive User")
     return current_user
+
+
 
 @app.post("/users/", response_model=UserModel)
 async def create_user(user: CreateUserModel, db: Session = Depends(get_db)):
@@ -121,8 +108,8 @@ async def create_user(user: CreateUserModel, db: Session = Depends(get_db)):
     hashed_password = get_password_hash(user.password)
     
     # Create the user in the database
-    db_user = schemas.User(username=user.username, email=user.email, full_name=user.full_name,
-                            hashed_password=hashed_password, disabled=user.disabled, role=user.role)
+    db_user = User(username=user.username, email=user.email, full_name=user.full_name,
+                            hashed_password=hashed_password, active=user.active, role=user.role)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -130,7 +117,8 @@ async def create_user(user: CreateUserModel, db: Session = Depends(get_db)):
     return db_user
 
 
-@app.post("/token", response_model=Token)
+
+@app.post("/token", response_model=TokenModel)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
@@ -139,6 +127,8 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
+
+
 
 @app.put("/users/me/change-password/", response_model= dict[str, str])
 async def change_password(old_password: str, new_password: str, current_user: UserModel = Depends(get_current_active_user), db: Session = Depends(get_db)):
