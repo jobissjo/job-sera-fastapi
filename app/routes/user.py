@@ -9,7 +9,7 @@ from app.utils.auth import (get_user, get_email, get_current_active_user,
 from fastapi.security import OAuth2PasswordRequestForm
 
 
-router = APIRouter()
+router = APIRouter(tags=["users"])
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 @router.post("/users/", response_model=UserModel)

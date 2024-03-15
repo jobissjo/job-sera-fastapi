@@ -1,7 +1,7 @@
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, Column, Integer, String, Boolean
+from app.utils.database import Base
 
-Base = declarative_base()
+
 
 class User(Base):
     __tablename__ = "users"
