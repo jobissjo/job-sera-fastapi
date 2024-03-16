@@ -34,12 +34,19 @@ async def get_jobs(db:Session= Depends(get_db)):
 
 @router.get('/{id}', response_model=JobModel)
 async def get_job_by_id( id: str, db : Session= Depends(get_db)):
+    
+    if 'jobs' not in metadata.tables:
+        create_table(jobs_table)
     filtered_job = db.query(Job).filter(Job.id == id).first()
+    if not filtered_job:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found")
     return filtered_job
 
 
 @router.put('/{id}',response_model=JobModel)
 async def update_job(id: str, employer_id:str, job_model:JobModel, db:Session = Depends(get_db)):
+    if 'jobs' not in metadata.tables:
+        create_table(jobs_table)
     job = db.query(Job).filter(Job.id == id).first()
 
     if not job:
@@ -60,3 +67,23 @@ async def update_job(id: str, employer_id:str, job_model:JobModel, db:Session = 
     db.refresh(job)
 
     return job
+
+
+@router.delete('/{id}')
+async def delete_job(id:str, employer_id: str,db:Session= Depends(get_db)):
+    if 'jobs' not in metadata.tables:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found")
+    job = db.query(Job).filter(Job.id == id).first()
+
+    if not job:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found")
+    if job.employer_id != employer_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You don not have access to modify this details")
+    
+    db.delete(job)
+    db.commit()
+    db.refresh()
+
+    return {"message", "Job deleted successfully"}
+
+    

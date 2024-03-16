@@ -1,11 +1,12 @@
 from sqlalchemy import Column, Integer, MetaData, String, JSON, Table
-from typing import List
 from app.utils.database import Base
+from sqlalchemy.types import CHAR
+import uuid
 
 class Job(Base):
     __tablename__ = 'jobs'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(CHAR(36), primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
     job_title = Column(String, index=True)
     company = Column(String)
     location = Column(String)
@@ -21,7 +22,7 @@ metadata = MetaData()
 jobs_table = Table(
     'jobs',
     metadata,
-    Column('id', Integer, primary_key=True),
+    Column('id', CHAR(36), primary_key=True, index=True, default=lambda:str (uuid.uuid4())),
     Column('job_title', String),
     Column('company', String),
     Column('location', String),

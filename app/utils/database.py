@@ -19,6 +19,8 @@ def get_db():
         db.close()
 
 
+
+
 def create_table(tableModel:any):
     try:
         tableModel.create(engine)

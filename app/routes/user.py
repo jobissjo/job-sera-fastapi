@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import MetaData
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from app.models.users import TokenData, TokenModel, UserModel, CreateUserModel
-from app.schemas.users import User
-from app.utils.database import get_db
+from app.schemas.users import User, users_table
+from app.utils.database import get_db, create_table
 from app.utils.auth import (get_user, get_email, get_current_active_user,
                             get_password_hash, authenticate_user, create_access_token, verify_password)
 from fastapi.security import OAuth2PasswordRequestForm
@@ -12,8 +13,12 @@ from fastapi.security import OAuth2PasswordRequestForm
 router = APIRouter(tags=["users"])
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
+metadata = MetaData()
+
 @router.post("/users/", response_model=UserModel)
 async def create_user(user: CreateUserModel, db: Session = Depends(get_db)):
+    if "users" not in metadata.tables:
+        create_table(users_table)
     # Check if the username is already taken
     existing_user = get_user(db, user.username)
     if existing_user:
