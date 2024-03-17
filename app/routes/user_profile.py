@@ -1,15 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.models.user_profile import UserProfileModel
 from app.models.users import UserModel
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.utils.database import get_db
 from app.utils.auth import get_current_active_user
 from app.utils.user_profile import profile_model_schemas
-from app.crud.user_profile import (
-    get_user_profile_by_id,
-    update_user_profile,
-    delete_user_profile
-)
+from app.crud.user_profile import update_user_profile, delete_user_profile
+from app.schemas.user_profile import UserProfile
 
 router = APIRouter(prefix='/user-profile',tags=["user profile"])
 
@@ -27,11 +24,16 @@ async def create_user_profile(user_profile_model:UserProfileModel,
     db.refresh(user_profile)
     return user_profile_model
 
-@router.get('/{profile_id}', response_model=UserProfileModel)
+@router.get('/{profile_id}')
 async def get_user_profile(profile_id: str, db: Session = Depends(get_db),
                      _current_user : Session = Depends(get_current_active_user)):
     print("this is not go to getting function")
-    user_profile = get_user_profile_by_id(db, profile_id)
+    user_profile = db.query(UserProfile).options(joinedload(UserProfile.personal_detail),
+                                                  joinedload(UserProfile.other_preference),
+                                                  joinedload(UserProfile.education),
+                                                  joinedload(UserProfile.certifications),
+                                                  joinedload(UserProfile.experience),
+                                                  joinedload(UserProfile.known_languages)).filter(UserProfile.profile_id == profile_id).first()
     if not user_profile:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User profile not found")
     return user_profile
@@ -41,8 +43,12 @@ async def get_user_profile(profile_id: str, db: Session = Depends(get_db),
 async def update_user_profile_endpoint(profile_id: str, user_profile_model: UserProfileModel,
                                  _current_user: Session = Depends(get_current_active_user),
                                  db: Session = Depends(get_db)):
-    user_profile = get_user_profile_by_id(db, profile_id)
-    print(user_profile, "is founded")
+    user_profile = db.query(UserProfile).options(joinedload(UserProfile.personal_detail),
+                                                  joinedload(UserProfile.other_preference),
+                                                  joinedload(UserProfile.education),
+                                                  joinedload(UserProfile.certifications),
+                                                  joinedload(UserProfile.experience),
+                                                  joinedload(UserProfile.known_languages)).filter(UserProfile.profile_id == profile_id).first()
     if not user_profile:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User profile not found")
 
@@ -50,11 +56,18 @@ async def update_user_profile_endpoint(profile_id: str, user_profile_model: User
     return updated_user_profile
 
 
-@router.delete('/{profile_id}', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/{profile_id}')
 async def delete_user_profile_endpoint(profile_id: str, db: Session = Depends(get_db),
                                  _current_user: Session = Depends(get_current_active_user)):
-    user_profile = get_user_profile_by_id(db, profile_id)
+    user_profile = db.query(UserProfile).options(joinedload(UserProfile.personal_detail),
+                                                  joinedload(UserProfile.other_preference),
+                                                  joinedload(UserProfile.education),
+                                                  joinedload(UserProfile.certifications),
+                                                  joinedload(UserProfile.experience),
+                                                  joinedload(UserProfile.known_languages)).filter(UserProfile.profile_id == profile_id).first()
     if not user_profile:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User profile not found")
 
     delete_user_profile(db, user_profile)
+
+    return {'message': 'user profile is deleted'}
