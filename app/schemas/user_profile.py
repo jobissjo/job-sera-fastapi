@@ -20,7 +20,8 @@ class PersonalDetail(Base):
     district = Column(String)
     postal_code = Column(String, nullable=True)
 
-    user_profile = relationship("UserProfile", back_populates="personal_detail")
+    user_profile = relationship("UserProfile", 
+                                back_populates="personal_detail")
 
 class OtherPreference(Base):
     __tablename__ = 'other_preferences'

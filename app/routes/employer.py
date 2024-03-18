@@ -2,53 +2,63 @@ from fastapi import Depends, status,APIRouter, HTTPException
 from sqlalchemy.orm import Session
 from app.models.employer import EmployerProfileType
 from app.utils.database import get_db
-from app.models.users import UserModel
+from app.models.users import UserModel, ResponseUser
 from app.utils.auth import get_current_active_user
 from app.schemas.employer import Address, CompanyInformation, PersonalEmployerInformation,AdditionalInformation, EmployerProfile
+from app.utils.employer import employer_profile_model_schemas
+
 
 router = APIRouter(prefix='/employer', tags=['employer'])
 
 
 
+
+
 @router.post('/')
-async def create_employer(employer:EmployerProfileType,
-                          db:Session = Depends(get_db),
-                          current_user:UserModel = Depends(get_current_active_user)):
+async def create_employer(employer: EmployerProfileType,
+                          db: Session = Depends(get_db),
+                          current_user: ResponseUser = Depends(get_current_active_user)):
     if not current_user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="You must be logged in to create a user profile")
-    
-    address_data = employer.companyInformation.address
-    address_model = Address(**address_data.dict())
-    db.add(address_model)
-    db.flush()  # This flushes pending changes to the database so that the auto-generated ID is available
-    
-    company_information_data = employer.companyInformation
-    company_information_model = CompanyInformation(**company_information_data.dict(), address_id=address_model.id)
-    db.add(company_information_model)
-    db.flush()
-    
-    personal_information_data = employer.personalInformation
-    personal_information_model = PersonalEmployerInformation(**personal_information_data.dict())
-    db.add(personal_information_model)
-    db.flush()
-    
-    additional_information_data = employer.additionalInformation
-    additional_information_model = AdditionalInformation(**additional_information_data.dict())
-    db.add(additional_information_model)
-    db.flush()
-    
-    # Create the employer profile model and associate the other models
-    employer_profile_model = EmployerProfile(personal_information=personal_information_model,
-                                              company_information=company_information_model,
-                                              additional_information=additional_information_model)
-    db.add(employer_profile_model)
-    db.commit()  # Commit all changes to the database
-    
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="You must be logged in to create an employer profile")
+    if current_user.role != 'employer':
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail="Your profile is not an employer profile")
+
+    # Check if the current user id matches the employer id
+    if current_user.id != employer.employer_id:
+        raise HTTPException(status.HTTP_403_FORBIDDEN, detail="User id and employer id do not match")
+
+    # Create PersonalEmployerInformation object
+    personal_info = PersonalEmployerInformation(**employer.personal_information.dict())
+
+    # Create CompanyInformation object
+    company_info_data = employer.company_information.dict()
+    address_data = company_info_data.pop('address')
+    print(address_data)
+    address = Address(**address_data)
+    print(address, company_info_data)
+    company_info = CompanyInformation(**company_info_data, address=address)
+    print("reached here")
+    # Create AdditionalInformation object
+    additional_info = AdditionalInformation(**employer.additional_information.dict())
+
+    # Create EmployerProfile object
+    employer_profile = EmployerProfile(
+        employer_id=employer.employer_id,
+        personal_information=personal_info,
+        company_information=company_info,
+        additional_information=additional_info
+    )
+
+    # Add and commit to the database
+    db.add(employer_profile)
+    db.commit()
+    db.refresh(employer_profile)
+
     return {"message": "Employer profile created successfully"}
 
-
 @router.get('/{id}')
-async def get_employer_by_id():
+async def get_employer_by_id(id:str, db: Session= Depends(get_db)):
     ...
 
 

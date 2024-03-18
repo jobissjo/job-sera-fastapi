@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import MetaData
 from sqlalchemy.orm import Session
 from datetime import timedelta
-from app.models.users import TokenData, TokenModel, UserModel, CreateUserModel
+from app.models.users import TokenData, TokenModel, UserModel, CreateUserModel, ResponseUser
 from app.schemas.users import User, users_table
 from app.utils.database import get_db, create_table
 from app.utils.auth import (get_user, get_email, get_current_active_user,
@@ -15,7 +15,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 metadata = MetaData()
 
-@router.post("/users/", response_model=UserModel)
+@router.post("/users/", response_model=ResponseUser)
 async def create_user(user: CreateUserModel, db: Session = Depends(get_db)):
     if "users" not in metadata.tables:
         create_table(users_table)
@@ -74,7 +74,7 @@ async def change_password(old_password: str, new_password: str, current_user: Us
 
 
 
-@router.get("/users/me", response_model=UserModel)
+@router.get("/users/me", response_model=ResponseUser)
 async def read_users_me(current_user: UserModel = Depends(get_current_active_user)):
     return current_user
 

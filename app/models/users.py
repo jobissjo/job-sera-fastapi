@@ -18,3 +18,6 @@ class UserModel(BaseModel):
 
 class CreateUserModel(UserModel):
     password: str
+
+class ResponseUser(UserModel):
+    id:str

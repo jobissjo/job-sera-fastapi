@@ -10,8 +10,8 @@ class Address(BaseModel):
     postal_code: str
 
 class PersonalInformation(BaseModel):
-    firstName: str
-    lastName: str
+    first_name: str
+    last_name: str
     username: str
     email: str
     phone_number: str
@@ -22,10 +22,10 @@ class PersonalInformation(BaseModel):
 class CompanyInformation(BaseModel):
     company_name: str
     industry: str
-    companySize: str
-    businessType: str
+    company_size: str
+    business_type: str
     company_phone_number: str
-    company_Website: str
+    company_website: str
     social_media_link: str
     desc: str
     address: Address
@@ -36,6 +36,6 @@ class AdditionalInformation(BaseModel):
 
 class EmployerProfileType(BaseModel):
     employer_id:str
-    personalInformation: PersonalInformation
-    companyInformation: CompanyInformation
-    additionalInformation: AdditionalInformation
+    personal_information: PersonalInformation
+    company_information: CompanyInformation
+    additional_information: AdditionalInformation
