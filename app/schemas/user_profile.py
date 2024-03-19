@@ -87,11 +87,11 @@ class UserProfile(Base):
     __tablename__ = 'user_profiles'
 
     profile_id = Column(String, primary_key=True, index=True)
-    personal_detail = relationship("PersonalDetail", uselist=False, back_populates="user_profile")
-    other_preference = relationship("OtherPreference", uselist=False, back_populates="user_profile")
-    education = relationship("EducationType", back_populates="user_profile")
-    certifications = relationship("CertificationType", back_populates="user_profile")
-    experience = relationship("Experience", back_populates="user_profile")
-    known_languages = relationship("Language", back_populates="user_profile")
+    personal_detail = relationship("PersonalDetail", uselist=False, back_populates="user_profile", cascade="all, delete")
+    other_preference = relationship("OtherPreference", uselist=False, back_populates="user_profile", cascade="all, delete")
+    education = relationship("EducationType", back_populates="user_profile", cascade="all, delete")
+    certifications = relationship("CertificationType", back_populates="user_profile", cascade="all, delete")
+    experience = relationship("Experience", back_populates="user_profile", cascade="all, delete")
+    known_languages = relationship("Language", back_populates="user_profile", cascade="all, delete")
     skills = Column(JSON)
     preferred_locations = Column(JSON)

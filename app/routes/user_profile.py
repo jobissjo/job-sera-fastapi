@@ -27,7 +27,6 @@ async def create_user_profile(user_profile_model:UserProfileModel,
 @router.get('/{profile_id}')
 async def get_user_profile(profile_id: str, db: Session = Depends(get_db),
                      _current_user : Session = Depends(get_current_active_user)):
-    print("this is not go to getting function")
     user_profile = db.query(UserProfile).options(joinedload(UserProfile.personal_detail),
                                                   joinedload(UserProfile.other_preference),
                                                   joinedload(UserProfile.education),

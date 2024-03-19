@@ -6,7 +6,7 @@ class Address(Base):
     __tablename__ = 'addresses'
 
     id = Column(Integer, primary_key=True, index=True)
-    company_info_id = Column(Integer, ForeignKey('company_information.id'))
+    company_info_id = Column(String, ForeignKey('company_information.id'))
     street = Column(String)
     city = Column(String)
     landmark = Column(String)
@@ -75,6 +75,6 @@ class EmployerProfile(Base):
     __tablename__ = 'employer_profiles'
 
     employer_id = Column(String, primary_key=True, index=True)
-    personal_information = relationship("PersonalEmployerInformation", back_populates="employer_profile")
-    company_information = relationship("CompanyInformation", back_populates="employer_profile")
-    additional_information = relationship("AdditionalInformation", back_populates="employer_profile")
+    personal_information = relationship("PersonalEmployerInformation", back_populates="employer_profile", cascade="all, delete")
+    company_information = relationship("CompanyInformation", back_populates="employer_profile", cascade="all, delete")
+    additional_information = relationship("AdditionalInformation", back_populates="employer_profile", cascade="all, delete")
