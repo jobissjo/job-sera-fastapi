@@ -18,3 +18,4 @@ app.include_router(employer.router)
 
 Base.metadata.create_all(bind=engine)
 
+
