@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.schemas.jobs import Job, jobs_table
 from app.utils.database import get_db, create_table
 from sqlalchemy import MetaData, desc
-
+from app.utils.auth import get_current_active_user
 
 router = APIRouter(prefix='/jobs', tags=['jobs'])
 metadata = MetaData()
@@ -12,9 +12,14 @@ metadata = MetaData()
 
 
 @router.post('/create-job', response_model=JobModel)
-async def create_job(job_model:CreateJobModel, db:Session = Depends(get_db)):
+async def create_job(job_model:CreateJobModel, db:Session = Depends(get_db), 
+                     current_user:Session = Depends(get_current_active_user)):
     if 'jobs' not in metadata.tables:
         create_table(jobs_table)
+    
+    if current_user.role != "employer":
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Only employer can create a job")
+
     job = Job(job_title=job_model.job_title, company=job_model.company,
               location=job_model.location, description=job_model.description,
               shift=job_model.shift, job_type=job_model.job_type,
@@ -72,7 +77,7 @@ async def update_job(id: str, employer_id:str, job_model:JobModel, db:Session = 
 @router.delete('/{id}')
 async def delete_job(id:str, employer_id: str,db:Session= Depends(get_db)):
     if 'jobs' not in metadata.tables:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found")
+        create_table(jobs_table)
     job = db.query(Job).filter(Job.id == id).first()
 
     if not job:

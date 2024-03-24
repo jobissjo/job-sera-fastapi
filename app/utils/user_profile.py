@@ -1,6 +1,9 @@
-# from app.models.user_profile import  PersonalDetail, OtherPreference, EducationType, CertificationType, Experience, Language,UserProfileModel
+
 from app.schemas.user_profile import UserProfile,PersonalDetail, OtherPreference, EducationType, CertificationType, Experience, Language
 from app.models.user_profile import UserProfileModel
+
+
+
 def profile_model_schemas(user_profile_model:UserProfileModel)->UserProfile:
     profile_id = user_profile_model.profileId
     personal_detail_data = user_profile_model.personalDetail

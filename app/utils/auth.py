@@ -74,3 +74,8 @@ async def get_current_active_user(current_user: ResponseUser = Depends(get_curre
         raise HTTPException(status_code=400, detail="Inactive User")
     return current_user
 
+async def get_current_employer(current_user:ResponseUser = Depends(get_current_active_user)):
+    if current_user.role != 'employer':
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="User is not allowed for this operation")
+    return current_user
+
