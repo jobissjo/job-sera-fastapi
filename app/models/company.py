@@ -13,8 +13,9 @@ class Review(BaseModel):
 class CompanyModel(BaseModel):
     companyName: str
     address: str
+    landmark:str
     employeesCount: int
     reviewsCount: int
     totalReviewRating: int
-    reviews: List[Review] = []
+    reviews: list[Review]
     openings: List[JobModel] = []
