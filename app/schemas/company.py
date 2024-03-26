@@ -30,4 +30,4 @@ class Company(Base):
     reviewsCount = Column(Integer)
     totalReviewRating = Column(Integer)
     openings = Column(JSON)
-    reviews = relationship("Review", back_populates="company")
+    reviews = relationship("Review", back_populates="company", cascade="all, delete")
