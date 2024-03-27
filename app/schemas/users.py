@@ -11,7 +11,6 @@ class User(Base):
     id = Column(CHAR(36), primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
     username = Column(String, unique=True, index=True)
     email = Column(String, index=True)
-    full_name = Column(String)
     hashed_password = Column(String)
     active = Column(Boolean, default=True)
     role = Column(String, default="user")
@@ -25,7 +24,6 @@ users_table = Table(
            default=lambda: str(uuid.uuid4())),
     Column('username', String),
     Column('email', String),
-    Column('full_name', String),
     Column('hashed_password', String),
     Column('active', Boolean, default=True),
     Column('role', String, default="user")

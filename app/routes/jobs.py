@@ -20,11 +20,12 @@ async def create_job(job_model:CreateJobModel, db:Session = Depends(get_db),
     if current_user.role != "employer":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Only employer can create a job")
 
-    job = Job(job_title=job_model.job_title, company=job_model.company,
+    job = Job(jobTitle=job_model.jobTitle, company=job_model.company,
               location=job_model.location, description=job_model.description,
-              shift=job_model.shift, job_type=job_model.job_type,
+              shift=job_model.shift, jobType=job_model.jobType,
+              salary=job_model.salary,
               experience=job_model.experience, qualifications= job_model.qualifications,
-              additional_details = job_model.additional_details, employer_id=job_model.employer_id)
+              additionalDetails = job_model.additionalDetails, employerId=job_model.employerId)
     db.add(job)
     db.commit()
     db.refresh(job)
@@ -56,17 +57,19 @@ async def update_job(id: str, employer_id:str, job_model:JobModel, db:Session = 
 
     if not job:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found")
-    if job.employer_id != employer_id:
+    if job.employerId != employer_id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You don not have access to modify this details")
     
-    job.job_title = job_model.job_title
+    job.jobTitle = job_model.jobTitle
     job.company = job_model.company
     job.location = job_model.location
     job.description = job_model.description
     job.shift = job_model.shift
+    job.salary = job_model.salary
+    job.jobType = job_model.jobType
     job.experience = job_model.experience
     job.qualifications = job_model.qualifications
-    job.additional_details = job_model.additional_details
+    job.additionalDetails = job_model.additionalDetails
 
     db.commit()
     db.refresh(job)

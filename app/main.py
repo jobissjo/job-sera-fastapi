@@ -2,9 +2,23 @@ from fastapi import  FastAPI, UploadFile, File
 from app.utils.database import Base, engine
 from typing import Annotated
 from app.routes import user, jobs,user_profile, employer,company
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+
+origins = [
+    "http://localhost:4200",
+]
+
+# Add CORS middleware to the FastAPI app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],  # Add other HTTP methods as needed
+    allow_headers=["*"],  # You can restrict specific headers if needed
+)
 @app.get('/')
 def hello_world():
     return {'message':'Your app is successfully deployed'}

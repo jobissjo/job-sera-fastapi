@@ -2,16 +2,17 @@ from pydantic import BaseModel
 
 
 class JobModel(BaseModel):
-    job_title:str
+    jobTitle:str
     company:str
     location:str
     description:str
+    salary:str
     shift : str
-    job_type:str
+    jobType:str
     experience:str
     qualifications:list[str]
     description:list[str]
-    additional_details:list[str]
+    additionalDetails:list[str]
 
 class CreateJobModel(JobModel):
-    employer_id:str
+    employerId:str
