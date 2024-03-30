@@ -12,7 +12,7 @@ class Address(Base):
     landmark = Column(String)
     state = Column(String)
     country = Column(String)
-    postal_code = Column(String)
+    postalCode = Column(String)
 
     company_info = relationship("CompanyInformation",
                                           back_populates="address")
@@ -25,18 +25,18 @@ class PersonalEmployerInformation(Base):
         "employer_profiles.employer_id",
         ondelete="CASCADE"
     ))
-    first_name = Column(String)
-    last_name = Column(String)
+    firstName = Column(String)
+    lastName = Column(String)
     username = Column(String)
     email = Column(String)
-    phone_number = Column(String)
+    phoneNumber = Column(String)
     password = Column(String)
     position = Column(String)
-    social_media_link = Column(String)
+    socialMediaLink = Column(String)
     gender = Column(String)
 
     employer_profile = relationship("EmployerProfile",
-                                    back_populates="personal_information")
+                                    back_populates="personalInformation")
 
 class CompanyInformation(Base):
     __tablename__ = 'company_information'
@@ -45,18 +45,18 @@ class CompanyInformation(Base):
     employer_profile_id = Column(String, ForeignKey(
         "employer_profiles.employer_id"
     ))
-    company_name = Column(String)
+    companyName = Column(String)
     industry = Column(String)
-    company_size = Column(String)
-    business_type = Column(String)
-    company_phone_number = Column(String)
-    company_website = Column(String)
-    social_media_link = Column(String)
+    companySize = Column(String)
+    businessType = Column(String)
+    companyPhoneNumber = Column(String)
+    companyWebsite = Column(String)
+    socialMediaLink = Column(String)
     desc = Column(String)
     address = relationship("Address", back_populates="company_info")
 
     employer_profile = relationship("EmployerProfile",
-                                    back_populates="company_information")
+                                    back_populates="companyInformation")
 
 class AdditionalInformation(Base):
     __tablename__ = 'additional_information'
@@ -65,16 +65,16 @@ class AdditionalInformation(Base):
     employer_profile_id = Column(String, ForeignKey(
         "employer_profiles.employer_id"
     ))
-    hear_about_us = Column(String)
-    agreed_to_terms = Column(String)
+    hearAboutUs = Column(String)
+    agreedToTerms = Column(String)
 
     employer_profile = relationship("EmployerProfile",
-                                    back_populates="additional_information")
+                                    back_populates="additionalInformation")
 
 class EmployerProfile(Base):
     __tablename__ = 'employer_profiles'
 
     employer_id = Column(String, primary_key=True, index=True)
-    personal_information = relationship("PersonalEmployerInformation", back_populates="employer_profile", cascade="all, delete")
-    company_information = relationship("CompanyInformation", back_populates="employer_profile", cascade="all, delete")
-    additional_information = relationship("AdditionalInformation", back_populates="employer_profile", cascade="all, delete")
+    personalInformation = relationship("PersonalEmployerInformation", back_populates="employer_profile", cascade="all, delete")
+    companyInformation = relationship("CompanyInformation", back_populates="employer_profile", cascade="all, delete")
+    additionalInformation = relationship("AdditionalInformation", back_populates="employer_profile", cascade="all, delete")

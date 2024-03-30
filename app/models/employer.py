@@ -7,35 +7,35 @@ class Address(BaseModel):
     landmark: str
     state: str
     country: str
-    postal_code: str
+    postalCode: str
 
 class PersonalInformation(BaseModel):
-    first_name: str
-    last_name: str
+    firstName: str
+    lastName: str
     username: str
     email: str
-    phone_number: str
+    phoneNumber: str
     position: str
-    social_media_link: str
+    socialMediaLink: str
     gender: str
 
 class CompanyInformation(BaseModel):
-    company_name: str
+    companyName: str
     industry: str
-    company_size: str
-    business_type: str
-    company_phone_number: str
-    company_website: str
-    social_media_link: str
+    companySize: str
+    businessType: str
+    companyPhoneNumber: str
+    companyWebsite: str
+    socialMediaLink: str
     desc: str
     address: Address
 
 class AdditionalInformation(BaseModel):
-    hear_about_us: str
-    agreed_to_terms: str
+    hearAboutUs: str
+    agreedToTerms: str
 
 class EmployerProfileType(BaseModel):
     employer_id:str
-    personal_information: PersonalInformation
-    company_information: CompanyInformation
-    additional_information: AdditionalInformation
+    personalInformation: PersonalInformation
+    companyInformation: CompanyInformation
+    additionalInformation: AdditionalInformation

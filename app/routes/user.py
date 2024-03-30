@@ -54,7 +54,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 
 @router.put("/users/me/change-password/", response_model= dict[str, str])
-async def change_password(old_password: str, new_password: str, current_user: UserModel = Depends(get_current_active_user), db: Session = Depends(get_db)):
+async def change_password(old_password: str, new_password: str, current_user: ResponseUser = Depends(get_current_active_user), db: Session = Depends(get_db)):
     # Verify the old password
     if not verify_password(old_password, current_user.hashed_password):
         raise HTTPException(status_code=400, detail="Incorrect old password")
