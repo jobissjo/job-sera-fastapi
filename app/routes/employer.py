@@ -36,10 +36,10 @@ async def create_employer(employer: EmployerProfileType,
         raise HTTPException(status.HTTP_403_FORBIDDEN, detail="User id and employer id do not match")
 
     # Create PersonalEmployerInformation object
-    personal_info = PersonalEmployerInformation(**employer.personal_information.dict())
+    personal_info = PersonalEmployerInformation(**employer.personalInformation.dict())
 
     # Create CompanyInformation object
-    company_info_data = employer.company_information.dict()
+    company_info_data = employer.companyInformation.dict()
     address_data = company_info_data.pop('address')
 
     # Create Address objects
@@ -48,14 +48,14 @@ async def create_employer(employer: EmployerProfileType,
     company_info = CompanyInformation(**company_info_data, address=address_objects)
 
     # Create AdditionalInformation object
-    additional_info = AdditionalInformation(**employer.additional_information.dict())
+    additional_info = AdditionalInformation(**employer.additionalInformation.dict())
 
     # Create EmployerProfile object
     employer_profile = EmployerProfile(
         employer_id=employer.employer_id,
-        personal_information=[personal_info],
-        company_information=[company_info],
-        additional_information=[additional_info]
+        personalInformation=[personal_info],
+        companyInformation=[company_info],
+        additionalInformation=[additional_info]
     )
 
     # Add and commit to the database
@@ -70,9 +70,9 @@ async def create_employer(employer: EmployerProfileType,
 async def get_employer_by_id(employer_id: str, db: Session = Depends(get_db)):
     # Retrieve the employer profile from the database based on the provided ID
     employer_profile = db.query(EmployerProfile).options(
-        joinedload(EmployerProfile.personal_information),
-        joinedload(EmployerProfile.company_information),
-        joinedload(EmployerProfile.additional_information)
+        joinedload(EmployerProfile.personalInformation),
+        joinedload(EmployerProfile.companyInformation),
+        joinedload(EmployerProfile.additionalInformation)
     ).filter(EmployerProfile.employer_id == employer_id).first()
 
     # Check if the employer profile exists
@@ -92,14 +92,14 @@ async def update_employer(employer_id: str, updated_employer: EmployerProfileTyp
     if not employer_profile:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Employer profile not found") 
 
-    employer_profile.personal_information = [PersonalEmployerInformation(**updated_employer.personal_information.dict())]
-    company_info_data = updated_employer.company_information.dict()
+    employer_profile.personalInformation = [PersonalEmployerInformation(**updated_employer.personalInformation.dict())]
+    company_info_data = updated_employer.companyInformation.dict()
     address_data = company_info_data.pop('address')
 
     # Create Address objects
     address_objects = [Address(**address_data)]
-    employer_profile.company_information = [CompanyInformation(**company_info_data,address=address_objects)]
-    employer_profile.additional_information = [AdditionalInformation(**updated_employer.additional_information.dict())]
+    employer_profile.companyInformation = [CompanyInformation(**company_info_data,address=address_objects)]
+    employer_profile.additionalInformation = [AdditionalInformation(**updated_employer.additionalInformation.dict())]
 
     db.commit()
     db.refresh(employer_profile)

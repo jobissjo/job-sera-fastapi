@@ -2,9 +2,9 @@ from app.schemas.employer import Address, CompanyInformation, PersonalEmployerIn
 from app.models.employer import EmployerProfileType
 def employer_profile_model_schemas(employer_profile_model: EmployerProfileType) -> EmployerProfile:
     employer_id = employer_profile_model.employer_id
-    personal_information_data = employer_profile_model.personal_information
-    company_information_data = employer_profile_model.company_information
-    additional_information_data = employer_profile_model.additional_information
+    personal_information_data = employer_profile_model.personalInformation
+    company_information_data = employer_profile_model.companyInformation
+    additional_information_data = employer_profile_model.additionalInformation
 
     # Create Address object for CompanyInformation
     address_data = company_information_data.address
@@ -14,7 +14,7 @@ def employer_profile_model_schemas(employer_profile_model: EmployerProfileType) 
         "landmark": address_data.landmark,
         "state": address_data.state,
         "country": address_data.country,
-        "postal_code": address_data.postal_code
+        "postalCode": address_data.postal_code
     }
     address_model = Address(**address_dict)
 
@@ -34,9 +34,9 @@ def employer_profile_model_schemas(employer_profile_model: EmployerProfileType) 
     # Create EmployerProfile object
     employer_profile = EmployerProfile(
         employer_id=employer_id,
-        personal_information=personal_information,
-        company_information=company_information,
-        additional_information=additional_information
+        personalInformation=personal_information,
+        companyInformation=company_information,
+        additionalInformation=additional_information
     )
 
     return employer_profile

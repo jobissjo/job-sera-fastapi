@@ -4,12 +4,12 @@ from sqlalchemy.orm import Session
 
 def update_employer_profile(db:Session, employer_profile: EmployerProfile, updated_employer:EmployerProfileType):
     
-    updated_employer.company_information.address = [updated_employer.company_information.model_dump().pop('address')]
+    updated_employer.companyInformation.address = [updated_employer.companyInformation.model_dump().pop('address')]
     print("i just started here")
-    employer_profile.company_information = [updated_employer.company_information.dict()]
+    employer_profile.companyInformation = [updated_employer.companyInformation.dict()]
     print("i completed a company info")
-    employer_profile.additional_information = [updated_employer.additional_information]
-    employer_profile.personal_information = [updated_employer.personal_information]
+    employer_profile.additionalInformation = [updated_employer.additionalInformation]
+    employer_profile.personalInformation = [updated_employer.personalInformation]
     print("here i reached")
     db.commit()
     db.refresh(employer_profile)
