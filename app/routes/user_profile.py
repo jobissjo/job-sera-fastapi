@@ -27,12 +27,12 @@ async def create_user_profile(user_profile_model:UserProfileModel,
 @router.get('/{profile_id}')
 async def get_user_profile(profile_id: str, db: Session = Depends(get_db),
                      _current_user : Session = Depends(get_current_active_user)):
-    user_profile = db.query(UserProfile).options(joinedload(UserProfile.personal_detail),
-                                                  joinedload(UserProfile.other_preference),
+    user_profile = db.query(UserProfile).options(joinedload(UserProfile.personalDetail),
+                                                  joinedload(UserProfile.otherPreference),
                                                   joinedload(UserProfile.education),
                                                   joinedload(UserProfile.certifications),
                                                   joinedload(UserProfile.experience),
-                                                  joinedload(UserProfile.known_languages)).filter(UserProfile.profile_id == profile_id).first()
+                                                  joinedload(UserProfile.knownLanguages)).filter(UserProfile.profileId == profile_id).first()
     if not user_profile:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User profile not found")
     return user_profile
@@ -42,12 +42,12 @@ async def get_user_profile(profile_id: str, db: Session = Depends(get_db),
 async def update_user_profile_endpoint(profile_id: str, user_profile_model: UserProfileModel,
                                  _current_user: Session = Depends(get_current_active_user),
                                  db: Session = Depends(get_db)):
-    user_profile = db.query(UserProfile).options(joinedload(UserProfile.personal_detail),
-                                                  joinedload(UserProfile.other_preference),
+    user_profile = db.query(UserProfile).options(joinedload(UserProfile.personalDetail),
+                                                  joinedload(UserProfile.otherPreference),
                                                   joinedload(UserProfile.education),
                                                   joinedload(UserProfile.certifications),
                                                   joinedload(UserProfile.experience),
-                                                  joinedload(UserProfile.known_languages)).filter(UserProfile.profile_id == profile_id).first()
+                                                  joinedload(UserProfile.knownLanguages)).filter(UserProfile.profileId == profile_id).first()
     if not user_profile:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User profile not found")
 
@@ -58,12 +58,12 @@ async def update_user_profile_endpoint(profile_id: str, user_profile_model: User
 @router.delete('/{profile_id}')
 async def delete_user_profile_endpoint(profile_id: str, db: Session = Depends(get_db),
                                  _current_user: Session = Depends(get_current_active_user)):
-    user_profile = db.query(UserProfile).options(joinedload(UserProfile.personal_detail),
-                                                  joinedload(UserProfile.other_preference),
+    user_profile = db.query(UserProfile).options(joinedload(UserProfile.personalDetail),
+                                                  joinedload(UserProfile.otherPreference),
                                                   joinedload(UserProfile.education),
                                                   joinedload(UserProfile.certifications),
                                                   joinedload(UserProfile.experience),
-                                                  joinedload(UserProfile.known_languages)).filter(UserProfile.profile_id == profile_id).first()
+                                                  joinedload(UserProfile.knownLanguages)).filter(UserProfile.profileId == profile_id).first()
     if not user_profile:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User profile not found")
 

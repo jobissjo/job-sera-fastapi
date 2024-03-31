@@ -6,41 +6,41 @@ class PersonalDetail(Base):
     __tablename__ = 'personal_details'
 
     id = Column(Integer, primary_key=True, index=True)
-    user_profile_id = Column(String, ForeignKey('user_profiles.profile_id'))
+    userProfileId = Column(String, ForeignKey('user_profiles.profileId'))
     name = Column(String)
     heading = Column(String)
     email = Column(String)
-    phone_number = Column(String)
+    phoneNumber = Column(String)
     dob = Column(Date, nullable=True)
     gender = Column(String, nullable=True)
-    social_media_link = Column(String, nullable=True)
-    github_link = Column(String, nullable=True)
+    socialMediaLink = Column(String, nullable=True)
+    githubLink = Column(String, nullable=True)
     country = Column(String)
     state = Column(String)
     district = Column(String)
-    postal_code = Column(String, nullable=True)
+    postalCode = Column(String, nullable=True)
 
     user_profile = relationship("UserProfile", 
-                                back_populates="personal_detail")
+                                back_populates="personalDetail")
 
 class OtherPreference(Base):
     __tablename__ = 'other_preferences'
 
     id = Column(Integer, primary_key=True, index=True)
-    user_profile_id = Column(String, ForeignKey('user_profiles.profile_id'))
-    job_type = Column(String)
+    userProfileId = Column(String, ForeignKey('user_profiles.profileId'))
+    jobType = Column(String)
 
-    user_profile = relationship("UserProfile", back_populates="other_preference")
+    user_profile = relationship("UserProfile", back_populates="otherPreference")
 
 class EducationType(Base):
     __tablename__ = 'education_types'
 
     id = Column(Integer, primary_key=True, index=True)
-    user_profile_id = Column(String, ForeignKey('user_profiles.profile_id'))
+    userProfileId = Column(String, ForeignKey('user_profiles.profileId'))
     level = Column(String)
-    field_of_study = Column(String)
-    started_date = Column(Date)
-    ended_date = Column(Date)
+    fieldOfStudy = Column(String)
+    startedDate = Column(Date)
+    endedDate = Column(Date)
 
     user_profile = relationship("UserProfile", back_populates="education")
 
@@ -48,13 +48,13 @@ class CertificationType(Base):
     __tablename__ = 'certification_types'
 
     id = Column(Integer, primary_key=True, index=True)
-    user_profile_id = Column(String, ForeignKey('user_profiles.profile_id'))
+    userProfileId = Column(String, ForeignKey('user_profiles.profileId'))
     title = Column(String)
-    certificate_id = Column(String)
+    certificateId = Column(String)
     mode = Column(String)
     institution = Column(String)
-    start_date = Column(Date)
-    end_date = Column(Date)
+    startDate = Column(Date)
+    endDate = Column(Date)
 
     user_profile = relationship("UserProfile", back_populates="certifications")
 
@@ -62,11 +62,11 @@ class Experience(Base):
     __tablename__ = 'experiences'
 
     id = Column(Integer, primary_key=True, index=True)
-    user_profile_id = Column(String, ForeignKey('user_profiles.profile_id'))
+    userProfileId = Column(String, ForeignKey('user_profiles.profileId'))
     position = Column(String)
-    company_name = Column(String)
-    start_date = Column(Date)
-    end_date = Column(Date)
+    companyName = Column(String)
+    startDate = Column(Date)
+    endDate = Column(Date)
 
     user_profile = relationship("UserProfile", back_populates="experience")
 
@@ -74,24 +74,24 @@ class Language(Base):
     __tablename__ = 'languages'
 
     id = Column(Integer, primary_key=True, index=True)
-    user_profile_id = Column(String, ForeignKey('user_profiles.profile_id'))
+    userProfileId = Column(String, ForeignKey('user_profiles.profileId'))
     language = Column(String)
     level = Column(String)
     reading = Column(Boolean)
     writing = Column(Boolean)
     speaking = Column(Boolean)
 
-    user_profile = relationship("UserProfile", back_populates="known_languages")
+    user_profile = relationship("UserProfile", back_populates="knownLanguages")
 
 class UserProfile(Base):
     __tablename__ = 'user_profiles'
 
-    profile_id = Column(String, primary_key=True, index=True)
-    personal_detail = relationship("PersonalDetail", uselist=False, back_populates="user_profile", cascade="all, delete")
-    other_preference = relationship("OtherPreference", uselist=False, back_populates="user_profile", cascade="all, delete")
+    profileId = Column(String, primary_key=True, index=True)
+    personalDetail = relationship("PersonalDetail", uselist=False, back_populates="user_profile", cascade="all, delete")
+    otherPreference = relationship("OtherPreference", uselist=False, back_populates="user_profile", cascade="all, delete")
     education = relationship("EducationType", back_populates="user_profile", cascade="all, delete")
     certifications = relationship("CertificationType", back_populates="user_profile", cascade="all, delete")
     experience = relationship("Experience", back_populates="user_profile", cascade="all, delete")
-    known_languages = relationship("Language", back_populates="user_profile", cascade="all, delete")
+    knownLanguages = relationship("Language", back_populates="user_profile", cascade="all, delete")
     skills = Column(JSON)
-    preferred_locations = Column(JSON)
+    preferredLocations = Column(JSON)

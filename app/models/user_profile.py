@@ -2,47 +2,46 @@ from typing import List, Optional
 from pydantic import BaseModel
 from datetime import date
 
-
 class PersonalDetail(BaseModel):
     name: str
     heading: str
     email: str
-    phone_number: str
+    phoneNumber: str
     dob: Optional[date] = None
     gender: Optional[str] = None
-    social_media_link: Optional[str] = None
-    github_link: Optional[str] = None
+    socialMediaLink: Optional[str] = None
+    githubLink: Optional[str] = None
     country: str
     state: str
     district: str
-    postal_code: Optional[str] = None
+    postalCode: Optional[str] = None
 
 
 class OtherPreference(BaseModel):
-    job_type: str
+    jobType: str
 
 
 class EducationType(BaseModel):
     level: str
-    field_of_study: str
-    started_date: date
-    ended_date: date
+    fieldOfStudy: str
+    startedDate: date
+    endedDate: date
 
 
 class CertificationType(BaseModel):
     title: str
-    certificate_id: str
+    certificateId: str
     mode: str
     institution: str
-    start_date: date
-    end_date: date
+    startDate: date
+    endDate: date
 
 
 class Experience(BaseModel):
     position: str
-    company_name: str
-    start_date: date
-    end_date: date
+    companyName: str
+    startDate: date
+    endDate: date
 
 
 class Language(BaseModel):

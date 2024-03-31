@@ -14,7 +14,7 @@ def employer_profile_model_schemas(employer_profile_model: EmployerProfileType) 
         "landmark": address_data.landmark,
         "state": address_data.state,
         "country": address_data.country,
-        "postalCode": address_data.postal_code
+        "postalCode": address_data.postalCode
     }
     address_model = Address(**address_dict)
 
