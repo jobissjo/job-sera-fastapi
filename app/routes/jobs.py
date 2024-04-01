@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.schemas.jobs import Job, jobs_table
 from app.utils.database import get_db, create_table
 from sqlalchemy import MetaData, desc
-from app.utils.auth import get_current_active_user
+from app.utils.auth import get_current_active_user, get_current_employer
 
 router = APIRouter(prefix='/jobs', tags=['jobs'])
 metadata = MetaData()
@@ -50,7 +50,8 @@ async def get_job_by_id( id: str, db : Session= Depends(get_db)):
 
 
 @router.put('/{id}',response_model=JobModel)
-async def update_job(id: str, employer_id:str, job_model:JobModel, db:Session = Depends(get_db)):
+async def update_job(id: str, employer_id:str, job_model:JobModel, db:Session = Depends(get_db),
+                     _current_employer:Session = Depends(get_current_employer)):
     if 'jobs' not in metadata.tables:
         create_table(jobs_table)
     job = db.query(Job).filter(Job.id == id).first()
@@ -78,7 +79,8 @@ async def update_job(id: str, employer_id:str, job_model:JobModel, db:Session = 
 
 
 @router.delete('/{id}')
-async def delete_job(id:str, employer_id: str,db:Session= Depends(get_db)):
+async def delete_job(id:str, employer_id: str,db:Session= Depends(get_db),
+                      _current_employer:Session = Depends(get_current_employer)):
     if 'jobs' not in metadata.tables:
         create_table(jobs_table)
     job = db.query(Job).filter(Job.id == id).first()

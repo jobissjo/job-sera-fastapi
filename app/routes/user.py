@@ -53,6 +53,11 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 
 
+@router.get("/users/me", response_model=ResponseUser)
+async def read_users_me(current_user: UserModel = Depends(get_current_active_user)):
+    return current_user
+
+
 @router.put("/users/me/change-password/", response_model= dict[str, str])
 async def change_password(old_password: str, new_password: str, current_user: ResponseUser = Depends(get_current_active_user), db: Session = Depends(get_db)):
     # Verify the old password
@@ -72,13 +77,7 @@ async def change_password(old_password: str, new_password: str, current_user: Re
 
     return {"message": "Password updated successfully"}
 
-
-
-@router.get("/users/me", response_model=ResponseUser)
-async def read_users_me(current_user: UserModel = Depends(get_current_active_user)):
-    return current_user
-
 # current_user: UserModel = Depends(get_current_active_user)
-@router.get("/users/me/items", response_model=dict[str,int])
-async def read_own_items():
-    return {"item_id": 1}
+# @router.get("/users/me/items", response_model=dict[str,int])
+# async def read_own_items():
+#     return {"item_id": 1}

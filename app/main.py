@@ -19,17 +19,17 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "DELETE"],  # Add other HTTP methods as needed
     allow_headers=["*"],  # You can restrict specific headers if needed
 )
-@app.get('/')
-def hello_world():
-    return {'message':'Your app is successfully deployed'}
+# @app.get('/')
+# def hello_world():
+#     return {'message':'Your app is successfully deployed'}
 
-@app.post("/uploadfile/")
-async def create_upload_file(file: UploadFile):
-    return {"filename": file.filename}
+# @app.post("/uploadfile/")
+# async def create_upload_file(file: UploadFile):
+#     return {"filename": file.filename}
 
-@app.post("/files/")
-async def create_file(file: Annotated[bytes, File()]):
-    return {"file_size": len(file)}
+# @app.post("/files/")
+# async def create_file(file: Annotated[bytes, File()]):
+#     return {"file_size": len(file)}
 
 app.include_router(user.router)
 app.include_router(jobs.router)
