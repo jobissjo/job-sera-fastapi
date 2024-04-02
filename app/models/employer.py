@@ -39,3 +39,9 @@ class EmployerProfileType(BaseModel):
     personalInformation: PersonalInformation
     companyInformation: CompanyInformation
     additionalInformation: AdditionalInformation
+
+class ResponseEmployerProfileType(BaseModel):
+    employer_id:str
+    personalInformation: list[PersonalInformation]
+    companyInformation: list[CompanyInformation]
+    additionalInformation: list[AdditionalInformation]

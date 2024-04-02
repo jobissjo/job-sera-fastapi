@@ -1,6 +1,6 @@
 from fastapi import Depends, status,APIRouter, HTTPException
 from sqlalchemy.orm import Session, joinedload
-from app.models.employer import EmployerProfileType
+from app.models.employer import EmployerProfileType, ResponseEmployerProfileType
 from app.utils.database import get_db
 from app.models.users import UserModel, ResponseUser
 from app.utils.auth import get_current_active_user
@@ -12,13 +12,14 @@ router = APIRouter(prefix='/employer', tags=['employer'])
 
 
 
-def get_by_id(employer_id: str, db: Session)->EmployerProfile:
+def get_by_id(employer_id: str, db: Session)->ResponseEmployerProfileType:
 
     employer = db.query(EmployerProfile).options(
-        joinedload(EmployerProfile.personal_information),
-        joinedload(EmployerProfile.company_information),
-        joinedload(EmployerProfile.additional_information)
+        joinedload(EmployerProfile.personalInformation),
+        joinedload(EmployerProfile.companyInformation),
+        joinedload(EmployerProfile.additionalInformation)
     ).filter(EmployerProfile.employer_id == employer_id).first()
+
 
     return employer
 @router.post('/')
@@ -66,7 +67,7 @@ async def create_employer(employer: EmployerProfileType,
     return {"message": "Employer profile created successfully"}
 
 
-@router.get('/{employer_id}', )
+@router.get('/{employer_id}', response_model=ResponseEmployerProfileType)
 async def get_employer_by_id(employer_id: str, db: Session = Depends(get_db)):
     # Retrieve the employer profile from the database based on the provided ID
     employer_profile = db.query(EmployerProfile).options(
@@ -74,7 +75,6 @@ async def get_employer_by_id(employer_id: str, db: Session = Depends(get_db)):
         joinedload(EmployerProfile.companyInformation),
         joinedload(EmployerProfile.additionalInformation)
     ).filter(EmployerProfile.employer_id == employer_id).first()
-
     # Check if the employer profile exists
     if not employer_profile:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Employer profile not found")
@@ -84,7 +84,7 @@ async def get_employer_by_id(employer_id: str, db: Session = Depends(get_db)):
 
 
 
-@router.put('/{employer_id}')
+@router.put('/{employer_id}', response_model=EmployerProfileType)
 async def update_employer(employer_id: str, updated_employer: EmployerProfileType,_current_user:Session= Depends(get_current_active_user),
                           db:Session = Depends(get_db)):
     employer_profile = get_by_id(employer_id, db)
