@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from app.utils.database import Base
 
@@ -30,7 +30,7 @@ class PersonalEmployerInformation(Base):
     username = Column(String)
     email = Column(String)
     phoneNumber = Column(String)
-    password = Column(String)
+    # password = Column(String)
     position = Column(String)
     socialMediaLink = Column(String)
     gender = Column(String)
@@ -66,7 +66,7 @@ class AdditionalInformation(Base):
         "employer_profiles.employer_id"
     ))
     hearAboutUs = Column(String)
-    agreedToTerms = Column(String)
+    agreedToTerms = Column(Boolean)
 
     employer_profile = relationship("EmployerProfile",
                                     back_populates="additionalInformation")

@@ -67,7 +67,7 @@ async def create_employer(employer: EmployerProfileType,
     return {"message": "Employer profile created successfully"}
 
 
-@router.get('/{employer_id}', response_model=ResponseEmployerProfileType)
+@router.get('/{employer_id}')
 async def get_employer_by_id(employer_id: str, db: Session = Depends(get_db)):
     # Retrieve the employer profile from the database based on the provided ID
     employer_profile = db.query(EmployerProfile).options(

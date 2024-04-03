@@ -32,7 +32,7 @@ class CompanyInformation(BaseModel):
 
 class AdditionalInformation(BaseModel):
     hearAboutUs: str
-    agreedToTerms: str
+    agreedToTerms: bool
 
 class EmployerProfileType(BaseModel):
     employer_id:str
