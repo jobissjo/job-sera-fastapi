@@ -48,6 +48,8 @@ async def get_job_by_id( id: str, db : Session= Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found")
     return filtered_job
 
+@router.get('/employer/{}')
+
 
 @router.put('/{id}',response_model=JobModel)
 async def update_job(id: str, employer_id:str, job_model:JobModel, db:Session = Depends(get_db),
@@ -87,7 +89,7 @@ async def delete_job(id:str, employer_id: str,db:Session= Depends(get_db),
 
     if not job:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found")
-    if job.employer_id != employer_id:
+    if job.employerId != employer_id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You don not have access to modify this details")
     
     db.delete(job)

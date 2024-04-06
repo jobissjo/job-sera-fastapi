@@ -13,6 +13,7 @@ class JobModel(BaseModel):
     qualifications:list[str]
     description:list[str]
     additionalDetails:list[str]
+    skills:list[str]
 
 class CreateJobModel(JobModel):
     employerId:str

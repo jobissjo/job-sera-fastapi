@@ -36,6 +36,7 @@ class Job(Base):
     qualifications = Column(JSON)
     additionalDetails = Column(JSON)
     employerId = Column(String)
+    skills= Column(JSON)
 
 metadata = MetaData()
 jobs_table = Table(
@@ -51,5 +52,6 @@ jobs_table = Table(
     Column('experience', String),
     Column('qualifications', JSON),
     Column('additionalDetails', JSON),
-    Column('employerId',String)
+    Column('employerId',String),
+    Column('skills', JSON)
 )
