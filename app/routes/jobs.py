@@ -9,9 +9,9 @@ from app.utils.auth import get_current_active_user, get_current_employer
 router = APIRouter(prefix='/jobs', tags=['jobs'])
 metadata = MetaData()
 
+JOB_NOT_FOUND = "Job not found"
 
-
-@router.post('/create-job', response_model=JobModel)
+@router.post('/', response_model=JobModel)
 async def create_job(job_model:CreateJobModel, db:Session = Depends(get_db), 
                      current_user:Session = Depends(get_current_active_user)):
     if 'jobs' not in metadata.tables:
@@ -23,9 +23,9 @@ async def create_job(job_model:CreateJobModel, db:Session = Depends(get_db),
     job = Job(jobTitle=job_model.jobTitle, company=job_model.company,
               location=job_model.location, description=job_model.description,
               shift=job_model.shift, jobType=job_model.jobType,
-              salary=job_model.salary,
+              salary=job_model.salary,skills=job_model.skills,
               experience=job_model.experience, qualifications= job_model.qualifications,
-              additionalDetails = job_model.additionalDetails, employerId=job_model.employerId)
+              responsibilities = job_model.responsibilities, employerId=job_model.employerId)
     db.add(job)
     db.commit()
     db.refresh(job)
@@ -38,6 +38,7 @@ async def get_jobs(db:Session= Depends(get_db)):
     return jobs
 
 
+
 @router.get('/{id}', response_model=JobModel)
 async def get_job_by_id( id: str, db : Session= Depends(get_db)):
     
@@ -45,11 +46,16 @@ async def get_job_by_id( id: str, db : Session= Depends(get_db)):
         create_table(jobs_table)
     filtered_job = db.query(Job).filter(Job.id == id).first()
     if not filtered_job:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=JOB_NOT_FOUND)
     return filtered_job
 
-@router.get('/employer/{}')
-
+@router.get('/employer/{employer_id}')
+async def get_job_by_employer_id(employer_id: str, db: Session = Depends(get_db),
+                                 _current_employer:Session = Depends(get_current_employer)):
+    filtered_job = db.query(Job).filter(Job.employerId == employer_id).all()
+    if not filtered_job:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="job")
+    return filtered_job
 
 @router.put('/{id}',response_model=JobModel)
 async def update_job(id: str, employer_id:str, job_model:JobModel, db:Session = Depends(get_db),
@@ -59,7 +65,7 @@ async def update_job(id: str, employer_id:str, job_model:JobModel, db:Session = 
     job = db.query(Job).filter(Job.id == id).first()
 
     if not job:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=JOB_NOT_FOUND)
     if job.employerId != employer_id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You don not have access to modify this details")
     
@@ -88,7 +94,7 @@ async def delete_job(id:str, employer_id: str,db:Session= Depends(get_db),
     job = db.query(Job).filter(Job.id == id).first()
 
     if not job:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=JOB_NOT_FOUND)
     if job.employerId != employer_id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You don not have access to modify this details")
     

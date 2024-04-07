@@ -21,6 +21,7 @@ def profile_model_schemas(user_profile_model:UserProfileModel)->UserProfile:
     # Create OtherPreference object
     other_preference = OtherPreference(**other_preference_data.model_dump(),userProfileId=profile_id)
     
+    
     # Create EducationType objects
     education_objects = [EducationType(**edu.model_dump(), userProfileId=profile_id) for edu in education_data]
 
