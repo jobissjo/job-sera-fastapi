@@ -59,9 +59,10 @@ async def read_users_me(current_user: UserModel = Depends(get_current_active_use
 
 
 @router.put("/users/me/change-password/", response_model= dict[str, str])
-async def change_password(old_password: str, new_password: str, current_user: ResponseUser = Depends(get_current_active_user), db: Session = Depends(get_db)):
+async def change_password(old_password: str, new_password: str,  db: Session = Depends(get_db), 
+                          current_user: ResponseUser = Depends(get_current_active_user)):
     # Verify the old password
-    if not verify_password(old_password, current_user.hashed_password):
+    if not verify_password(old_password, current_user):
         raise HTTPException(status_code=400, detail="Incorrect old password")
 
     # Verify that the new password is different from the old password

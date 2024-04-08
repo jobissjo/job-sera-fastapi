@@ -8,6 +8,8 @@ from app.utils.user_profile import profile_model_schemas
 from app.crud.user_profile import update_user_profile, delete_user_profile
 from app.schemas.user_profile import UserProfile
 
+USER_PROFILE_NOT_FOUND = "User profile not found"
+
 router = APIRouter(prefix='/user-profile',tags=["user profile"])
 
 
@@ -34,7 +36,7 @@ async def get_user_profile(profile_id: str, db: Session = Depends(get_db),
                                                   joinedload(UserProfile.experience),
                                                   joinedload(UserProfile.knownLanguages)).filter(UserProfile.profileId == profile_id).first()
     if not user_profile:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User profile not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=USER_PROFILE_NOT_FOUND)
     return user_profile
 
 
@@ -49,7 +51,7 @@ async def update_user_profile_endpoint(profile_id: str, user_profile_model: User
                                                   joinedload(UserProfile.experience),
                                                   joinedload(UserProfile.knownLanguages)).filter(UserProfile.profileId == profile_id).first()
     if not user_profile:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User profile not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=USER_PROFILE_NOT_FOUND)
 
     updated_user_profile = update_user_profile(db, user_profile, user_profile_model)
     return updated_user_profile
@@ -65,7 +67,7 @@ async def delete_user_profile_endpoint(profile_id: str, db: Session = Depends(ge
                                                   joinedload(UserProfile.experience),
                                                   joinedload(UserProfile.knownLanguages)).filter(UserProfile.profileId == profile_id).first()
     if not user_profile:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User profile not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=USER_PROFILE_NOT_FOUND)
 
     delete_user_profile(db, user_profile)
 

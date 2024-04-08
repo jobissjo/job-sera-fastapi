@@ -4,6 +4,10 @@ from fastapi import UploadFile
 
 
 class JobApplicationModel(BaseModel):
+    name:str
+    email:str
+    phoneNumber:str
+    location:str
     jobId:str
     userId:str
     ableToCommute:bool
