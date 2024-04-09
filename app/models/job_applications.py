@@ -15,3 +15,4 @@ class JobApplicationModel(BaseModel):
     highQualification:str
     experience:int
     coverLetter:str
+    interviewDates:str

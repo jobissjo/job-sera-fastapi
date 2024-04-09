@@ -17,3 +17,6 @@ class JobModel(BaseModel):
 
 class CreateJobModel(JobModel):
     employerId:str
+
+class ResponseJobModel(JobModel):
+    id:str

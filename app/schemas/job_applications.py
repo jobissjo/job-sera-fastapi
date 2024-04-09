@@ -1,5 +1,4 @@
 from sqlalchemy import Column, Integer, String, Boolean
-# from sqlalchemy.orm import relationship
 from app.utils.database import Base
 from sqlalchemy.types import CHAR
 import uuid
@@ -19,4 +18,5 @@ class JobApplication(Base):
     highQualification = Column(String)
     experience = Column(Integer)
     coverLetter = Column(String)
+    interviewDates = Column(String)
 

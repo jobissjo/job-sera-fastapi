@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from app.models.jobs import JobModel,CreateJobModel
+from app.models.jobs import JobModel,CreateJobModel, ResponseJobModel
 from sqlalchemy.orm import Session
 from app.schemas.jobs import Job, jobs_table
 from app.utils.database import get_db, create_table
@@ -32,14 +32,14 @@ async def create_job(job_model:CreateJobModel, db:Session = Depends(get_db),
     return job
 
 
-@router.get('/', response_model=list[JobModel])
+@router.get('/', response_model=list[ResponseJobModel])
 async def get_jobs(db:Session= Depends(get_db)):
     jobs = db.query(Job).order_by(desc(Job.id)).limit(10).all()
     return jobs
 
 
 
-@router.get('/{id}', response_model=JobModel)
+@router.get('/{id}', response_model=ResponseJobModel)
 async def get_job_by_id( id: str, db : Session= Depends(get_db)):
     
     if 'jobs' not in metadata.tables:
