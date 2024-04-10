@@ -1,6 +1,6 @@
 from pydantic import BaseModel
-from typing import Optional
-from fastapi import UploadFile
+from typing import Annotated, Optional
+from fastapi import File, UploadFile
 
 
 class JobApplicationModel(BaseModel):
@@ -11,7 +11,7 @@ class JobApplicationModel(BaseModel):
     jobId:str
     userId:str
     ableToCommute:bool
-    resume:Optional[UploadFile]
+    resume:any
     highQualification:str
     experience:int
     coverLetter:str
