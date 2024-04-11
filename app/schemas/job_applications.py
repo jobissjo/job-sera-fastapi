@@ -4,6 +4,7 @@ from sqlalchemy.types import CHAR
 import uuid
 
 
+
 class JobApplication(Base):
     __tablename__ = 'job_applications'
 

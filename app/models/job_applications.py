@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel,PydanticUserError
 from typing import Annotated, Optional
 from fastapi import File, UploadFile
 
@@ -11,7 +11,7 @@ class JobApplicationModel(BaseModel):
     jobId:str
     userId:str
     ableToCommute:bool
-    resume:any
+    resume:Optional[UploadFile]
     highQualification:str
     experience:int
     coverLetter:str
