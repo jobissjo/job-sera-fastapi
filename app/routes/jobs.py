@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.models.jobs import JobModel,CreateJobModel, ResponseJobModel
 from sqlalchemy.orm import Session
+from app.models.users import ResponseUser
 from app.schemas.jobs import Job, jobs_table
 from app.utils.database import get_db, create_table
 from sqlalchemy import MetaData, desc
@@ -11,13 +12,13 @@ metadata = MetaData()
 
 JOB_NOT_FOUND = "Job not found"
 
-@router.post('/', response_model=JobModel)
+@router.post('/', response_model=ResponseJobModel)
 async def create_job(job_model:CreateJobModel, db:Session = Depends(get_db), 
-                     current_user:Session = Depends(get_current_active_user)):
+                     current_employer:ResponseUser = Depends(get_current_employer)):
     if 'jobs' not in metadata.tables:
         create_table(jobs_table)
     
-    if current_user.role != "employer":
+    if current_employer.role != "employer":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Only employer can create a job")
 
     job = Job(jobTitle=job_model.jobTitle, company=job_model.company,
@@ -51,7 +52,7 @@ async def get_job_by_id( id: str, db : Session= Depends(get_db)):
 
 @router.get('/employer/{employer_id}')
 async def get_job_by_employer_id(employer_id: str, db: Session = Depends(get_db),
-                                 _current_employer:Session = Depends(get_current_employer)):
+                                 _current_employer:ResponseUser = Depends(get_current_employer)):
     filtered_job = db.query(Job).filter(Job.employerId == employer_id).all()
     if not filtered_job:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="job")
@@ -59,7 +60,7 @@ async def get_job_by_employer_id(employer_id: str, db: Session = Depends(get_db)
 
 @router.put('/{id}',response_model=JobModel)
 async def update_job(id: str, employer_id:str, job_model:JobModel, db:Session = Depends(get_db),
-                     _current_employer:Session = Depends(get_current_employer)):
+                     _current_employer:ResponseUser = Depends(get_current_employer)):
     if 'jobs' not in metadata.tables:
         create_table(jobs_table)
     job = db.query(Job).filter(Job.id == id).first()
@@ -78,7 +79,7 @@ async def update_job(id: str, employer_id:str, job_model:JobModel, db:Session = 
     job.jobType = job_model.jobType
     job.experience = job_model.experience
     job.qualifications = job_model.qualifications
-    job.additionalDetails = job_model.additionalDetails
+    job.responsibilities = job_model.responsibilities
 
     db.commit()
     db.refresh(job)
