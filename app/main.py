@@ -2,7 +2,7 @@ from fastapi import  FastAPI, UploadFile, File
 from app.utils.database import Base, engine
 from typing import Annotated
 from app.routes import (user, jobs,user_profile, employer,company, job_applications,
-                        saved_jobs)
+                        saved_jobs, user_notification)
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -39,6 +39,7 @@ app.include_router(employer.router)
 app.include_router(company.router)
 app.include_router(job_applications.router)
 app.include_router(saved_jobs.router)
+app.include_router(user_notification.router)
 
 Base.metadata.create_all(bind=engine)
 

@@ -20,4 +20,4 @@ class JobApplication(Base):
     experience = Column(Integer)
     coverLetter = Column(String)
     interviewDates = Column(String)
-
+    resumePath = Column(String)

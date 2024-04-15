@@ -2,25 +2,7 @@ from sqlalchemy import Column, Integer, MetaData, String, JSON, Table
 from app.utils.database import Base
 from sqlalchemy.types import CHAR
 import uuid
-# {
-#       "jobTitle": "Python Developer",
-#       "companyName": "Jo4Tech",
-#       "location": "Trivnadrum",
-#       "description": [
-#         "Good communication in english",
-#         "Good technical skills"
-#       ],
-#       "salary": "15000-21000",
-#       "shift": "day",
-#       "jobType": "permanent",
-#       "experience": "2 year",
-#       "qualifications": [
-#         "Bsc Mathematics"
-#       ],
-#       "additionalDetails": [
-#         "Local Candidate preferred"
-#       ]
-#     }
+
 class Job(Base):
     __tablename__ = 'jobs'
 
