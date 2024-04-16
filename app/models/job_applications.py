@@ -11,7 +11,7 @@ class JobApplicationModel(BaseModel):
     jobId:str
     userId:str
     ableToCommute:bool
-    # resume:Optional[UploadFile]
+    resume:bytes
     highQualification:str
     experience:int
     coverLetter:str

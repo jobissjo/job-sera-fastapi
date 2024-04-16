@@ -6,6 +6,7 @@ from app.schemas.jobs import Job, jobs_table
 from app.utils.database import get_db, create_table
 from sqlalchemy import MetaData, desc
 from app.utils.auth import get_current_active_user, get_current_employer
+from app.models.users import ResponseUser
 
 router = APIRouter(prefix='/jobs', tags=['jobs'])
 metadata = MetaData()
@@ -59,15 +60,15 @@ async def get_job_by_employer_id(employer_id: str, db: Session = Depends(get_db)
     return filtered_job
 
 @router.put('/{id}',response_model=JobModel)
-async def update_job(id: str, employer_id:str, job_model:JobModel, db:Session = Depends(get_db),
-                     _current_employer:ResponseUser = Depends(get_current_employer)):
+async def update_job(id: str, job_model:JobModel, db:Session = Depends(get_db),
+                     current_employer:ResponseUser = Depends(get_current_employer)):
     if 'jobs' not in metadata.tables:
         create_table(jobs_table)
     job = db.query(Job).filter(Job.id == id).first()
 
     if not job:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=JOB_NOT_FOUND)
-    if job.employerId != employer_id:
+    if job.employerId != current_employer.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You don not have access to modify this details")
     
     job.jobTitle = job_model.jobTitle
@@ -88,20 +89,19 @@ async def update_job(id: str, employer_id:str, job_model:JobModel, db:Session = 
 
 
 @router.delete('/{id}')
-async def delete_job(id:str, employer_id: str,db:Session= Depends(get_db),
-                      _current_employer:Session = Depends(get_current_employer)):
+async def delete_job(id:str, db:Session= Depends(get_db),
+                      current_employer:ResponseUser = Depends(get_current_employer)):
     if 'jobs' not in metadata.tables:
         create_table(jobs_table)
     job = db.query(Job).filter(Job.id == id).first()
 
     if not job:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=JOB_NOT_FOUND)
-    if job.employerId != employer_id:
+    if job.employerId != current_employer.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You don not have access to modify this details")
     
     db.delete(job)
     db.commit()
-    db.refresh()
 
     return {"message", "Job deleted successfully"}
 

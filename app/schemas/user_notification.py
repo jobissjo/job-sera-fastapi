@@ -14,7 +14,7 @@ class UserNotification(Base):
     title = Column(String)
     message =Column(String) 
     jobId = Column(String)
-    jobPost = Column(String)
+    position = Column(String)
     companyName = Column(String)
     deleteOrResponded = Column(JSON)
     createdDate = Column(DateTime, default=datetime.now(dt.UTC))
