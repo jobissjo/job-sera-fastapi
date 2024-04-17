@@ -1,8 +1,8 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean,Date
 from app.utils.database import Base
 from sqlalchemy.types import CHAR
 import uuid
-
+import datetime
 
 class JobApplication(Base):
     __tablename__ = 'job_applications'
@@ -20,3 +20,7 @@ class JobApplication(Base):
     coverLetter = Column(String)
     interviewDates = Column(String)
     resumePath = Column(String)
+    role = Column(String)
+    company = Column(String)
+    status = Column(String)
+    appliedOn = Column(Date, default=datetime.date.today)

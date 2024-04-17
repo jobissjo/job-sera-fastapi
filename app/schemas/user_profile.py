@@ -5,6 +5,7 @@ from app.utils.database import Base
 class PersonalDetail(Base):
     __tablename__ = 'personal_details'
 
+
     id = Column(Integer, primary_key=True, index=True)
     userProfileId = Column(String, ForeignKey('user_profiles.profileId'))
     name = Column(String)
@@ -80,8 +81,8 @@ class Language(Base):
     reading = Column(Boolean)
     writing = Column(Boolean)
     speaking = Column(Boolean)
-
     user_profile = relationship("UserProfile", back_populates="knownLanguages")
+
 
 class UserProfile(Base):
     __tablename__ = 'user_profiles'

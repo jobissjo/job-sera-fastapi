@@ -1,7 +1,7 @@
 from pydantic import BaseModel,PydanticUserError
 from typing import Annotated, Optional
 from fastapi import File, UploadFile
-
+from datetime import date
 
 class JobApplicationModel(BaseModel):
     name:str
@@ -16,6 +16,10 @@ class JobApplicationModel(BaseModel):
     coverLetter:str
     interviewDates:str
     resumePath:str
+    role:str
+    company:str
+    status:str
 
 class ResponseJobApplication(JobApplicationModel):
     id:str
+    appliedOn:date

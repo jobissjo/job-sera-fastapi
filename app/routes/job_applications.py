@@ -20,8 +20,8 @@ async def create_job_application(job_application: JobApplicationModel, db: Sessi
                    jobId=job_application.jobId, userId=job_application.userId,
                    ableToCommute=job_application.ableToCommute, highQualification=job_application.highQualification,
                    experience=job_application.experience,coverLetter=job_application.coverLetter,
-                    interviewDates=job_application.interviewDates, resumePath=job_application.resumePath )
-    # print(job_application)
+                    interviewDates=job_application.interviewDates, resumePath=job_application.resumePath,
+                     role = job_application.role, company = job_application.company, status= job_application.status )
     db.add(job_applicant)
     db.commit()
     db.refresh(job_applicant)
@@ -64,7 +64,7 @@ async def get_resume(file_path: str):
     # Return the resume content with appropriate headers
     return Response(content=resume_content, media_type="application/octet-stream")
 
-@router.get('/job/{id}')
+@router.get('/job/{job_id}')
 async def get_job_application_by_job_id(job_id: str, db:Session = Depends(get_db)):
     job_application = db.query(JobApplication).filter(JobApplication.jobId == job_id).all()
     return job_application
@@ -75,7 +75,7 @@ async def get_job_application_by_id(id: str, db:Session = Depends(get_db)):
     job_application = db.query(JobApplication).filter(JobApplication.id == id).all()
     return job_application
 
-@router.get('/user/{id}')
+@router.get('/user/{user_id}')
 async def get_job_application_by_user_id(user_id: str, db:Session = Depends(get_db)):
     job_application = db.query(JobApplication).filter(JobApplication.userId == user_id).all()
     return job_application
