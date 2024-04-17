@@ -11,8 +11,11 @@ class JobApplicationModel(BaseModel):
     jobId:str
     userId:str
     ableToCommute:bool
-    resume:bytes
     highQualification:str
     experience:int
     coverLetter:str
     interviewDates:str
+    resumePath:str
+
+class ResponseJobApplication(JobApplicationModel):
+    id:str

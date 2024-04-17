@@ -4,13 +4,12 @@ from sqlalchemy.types import CHAR
 import uuid
 
 
-
 class JobApplication(Base):
     __tablename__ = 'job_applications'
 
     id = Column(CHAR(36), primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
     name = Column(String)
-    email = Column(String, index=True, unique=True)
+    email = Column(String)
     phoneNumber = Column(String)
     location = Column(String)
     jobId = Column(String)
