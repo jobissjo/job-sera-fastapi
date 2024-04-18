@@ -71,6 +71,7 @@ class AdditionalInformation(Base):
     employer_profile = relationship("EmployerProfile",
                                     back_populates="additionalInformation")
 
+
 class EmployerProfile(Base):
     __tablename__ = 'employer_profiles'
 

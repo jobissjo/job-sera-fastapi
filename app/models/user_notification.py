@@ -7,6 +7,7 @@ class UserNotificationModel(BaseModel):
     title:str
     message:str
     jobId:str
+    userId:str = ''
     position:str
     companyName:str
     deleteOrResponded: list[str] = []

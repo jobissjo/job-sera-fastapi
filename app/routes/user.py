@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import MetaData
 from sqlalchemy.orm import Session
 from datetime import timedelta
-from app.models.users import TokenData, TokenModel, UserModel, CreateUserModel, ResponseUser
+from app.models.users import ResponseUserFull, TokenData, TokenModel, UserModel, CreateUserModel, ResponseUser
 from app.schemas.users import User, users_table
 from app.utils.database import get_db, create_table
 from app.utils.auth import (get_user, get_email, get_current_active_user,
@@ -58,11 +58,13 @@ async def read_users_me(current_user: UserModel = Depends(get_current_active_use
     return current_user
 
 
-@router.put("/users/me/change-password/", response_model= dict[str, str])
+
+@router.put("/users/me/change-password/")
 async def change_password(old_password: str, new_password: str,  db: Session = Depends(get_db), 
-                          current_user: ResponseUser = Depends(get_current_active_user)):
+                          current_user: ResponseUserFull = Depends(get_current_active_user)):
     # Verify the old password
-    if not verify_password(old_password, current_user):
+
+    if not verify_password(old_password, current_user.hashed_password):
         raise HTTPException(status_code=400, detail="Incorrect old password")
 
     # Verify that the new password is different from the old password
@@ -71,9 +73,9 @@ async def change_password(old_password: str, new_password: str,  db: Session = D
 
     # Hash the new password
     hashed_password = get_password_hash(new_password)
-
+    get_user = db.query(User).filter(User.id == current_user.id).first()
     # Update the user's hashed password in the database
-    current_user.hashed_password = hashed_password
+    get_user.hashed_password = hashed_password
     db.commit()
 
     return {"message": "Password updated successfully"}

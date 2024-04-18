@@ -20,3 +20,6 @@ class CreateUserModel(UserModel):
 
 class ResponseUser(UserModel):
     id:str
+
+class ResponseUserFull(ResponseUser):
+    hashed_password:str

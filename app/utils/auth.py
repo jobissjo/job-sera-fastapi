@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException,status
 from jose import JWTError, jwt
-from app.models.users import TokenData, UserModel, ResponseUser
+from app.models.users import ResponseUserFull, TokenData, UserModel, ResponseUser
 from app.schemas.users import User
 from datetime import datetime, timedelta
 import datetime as dt
@@ -69,7 +69,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         raise credential_exception
     return user
 
-async def get_current_active_user(current_user: ResponseUser = Depends(get_current_user)):
+async def get_current_active_user(current_user: ResponseUserFull = Depends(get_current_user)):
     if not current_user.active:
         raise HTTPException(status_code=400, detail="Inactive User")
     return current_user

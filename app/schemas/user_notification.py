@@ -8,12 +8,14 @@ import datetime as dt
 class UserNotification(Base):
     __tablename__ = 'user_notification'
 
+
     id = Column(CHAR(36), primary_key=True, index=True,
                 default=lambda: str(uuid.uuid4()))
     notificationType = Column(String)
     title = Column(String)
     message =Column(String) 
     jobId = Column(String)
+    userId = Column(String, default='')
     position = Column(String)
     companyName = Column(String)
     deleteOrResponded = Column(JSON)
