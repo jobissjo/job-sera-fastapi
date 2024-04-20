@@ -38,6 +38,7 @@ class PersonalEmployerInformation(Base):
     employer_profile = relationship("EmployerProfile",
                                     back_populates="personalInformation")
 
+
 class CompanyInformation(Base):
     __tablename__ = 'company_information'
 

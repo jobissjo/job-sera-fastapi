@@ -7,6 +7,7 @@ from app.utils.database import get_db, create_table
 from sqlalchemy import MetaData, desc
 from app.utils.auth import get_current_active_user, get_current_employer
 from app.models.users import ResponseUser
+from typing import List, Optional
 
 router = APIRouter(prefix='/jobs', tags=['jobs'])
 metadata = MetaData()
@@ -39,6 +40,19 @@ async def get_jobs(db:Session= Depends(get_db)):
     jobs = db.query(Job).order_by(desc(Job.id)).limit(10).all()
     return jobs
 
+@router.get('/search-result')
+def get_jobs_by_filters(job_title:str,location: Optional[str] = None, 
+                              experience: Optional[str] = None, db: Session = Depends(get_db)):
+    query = db.query(Job)
+    print(f"job title: {job_title}, location : {location}, experience : {experience}")
+    if job_title:
+        query = query.filter(Job.jobTitle.like(f'%{job_title}%'))
+    if location:
+        query = query.filter(Job.location.like(f"%{location}%") )
+    if experience:
+        query = query.filter(Job.experience == experience)
+    
+    return query.all()
 
 
 @router.get('/{id}', response_model=ResponseJobModel)
@@ -104,5 +118,10 @@ async def delete_job(id:str, db:Session= Depends(get_db),
     db.commit()
 
     return {"message", "Job deleted successfully"}
+
+
+
+
+
 
     

@@ -4,6 +4,8 @@ from typing import Annotated
 from app.routes import (user, jobs,user_profile, employer,company, job_applications,
                         saved_jobs, user_notification)
 from fastapi.middleware.cors import CORSMiddleware
+from datetime import date
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -28,9 +30,15 @@ app.add_middleware(
 # async def create_upload_file(file: UploadFile):
 #     return {"filename": file.filename}
 
-@app.post("/files/")
-async def create_file(file: Annotated[bytes, File()]):
-    return {"file_size": len(file)}
+# @app.post("/files/")
+# async def create_file(file: Annotated[bytes, File()]):
+#     return {"file_size": len(file)}
+
+class MyDate(BaseModel):
+    date:date
+@app.post("/whatever")
+async def create_file(date: MyDate):
+    return {"file_size": date}
 
 app.include_router(user.router)
 app.include_router(jobs.router)

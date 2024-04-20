@@ -72,7 +72,7 @@ async def get_employer_by_id(employer_id: str, db: Session = Depends(get_db)):
     # Retrieve the employer profile from the database based on the provided ID
     employer_profile = db.query(EmployerProfile).options(
         joinedload(EmployerProfile.personalInformation),
-        joinedload(EmployerProfile.companyInformation),
+        joinedload(EmployerProfile.companyInformation).joinedload(CompanyInformation.address),
         joinedload(EmployerProfile.additionalInformation)
     ).filter(EmployerProfile.employer_id == employer_id).first()
     # Check if the employer profile exists
