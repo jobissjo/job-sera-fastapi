@@ -11,8 +11,8 @@ app = FastAPI()
 
 
 origins = [
-    "http://localhost:4200",
-    "https://sample-firebase-project-883bd.web.app/"
+    "https://sample-firebase-project-883bd.web.app",
+    "http://localhost:4200"
 ]
 
 # Add CORS middleware to the FastAPI app
