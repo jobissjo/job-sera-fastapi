@@ -29,11 +29,11 @@ async def get_db():
             await db.close()
 
 
-def create_table(tableModel:any):
+def create_table(table_model:any):
     try:
-        tableModel.create(engine)
+        table_model.create(engine)
     except IntegrityError as e:
-        ...
+        print(f"{e}")
     except Exception:
         ...
 

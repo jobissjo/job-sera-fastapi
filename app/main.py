@@ -1,6 +1,4 @@
-from fastapi import  FastAPI, UploadFile, File
-from app.core.database import Base, engine
-from typing import Annotated
+from fastapi import  FastAPI
 from app.routes import (user, jobs,user_profile, employer,company, job_applications,
                         saved_jobs, user_notification)
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,17 +21,7 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],  
 )
-# @app.get('/')
-# def hello_world():
-#     return {'message':'Your app is successfully deployed'}
 
-# @app.post("/uploadfile/")
-# async def create_upload_file(file: UploadFile):
-#     return {"filename": file.filename}
-
-# @app.post("/files/")
-# async def create_file(file: Annotated[bytes, File()]):
-#     return {"file_size": len(file)}
 
 class MyDate(BaseModel):
     date:date

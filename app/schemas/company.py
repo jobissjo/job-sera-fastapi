@@ -2,6 +2,7 @@ import uuid
 from app.core.database import Base
 from sqlalchemy import Column, String,Integer,CHAR, ForeignKey, JSON
 from sqlalchemy.orm import relationship
+from app.utils.constants import ON_DELETE
 
 
 class Review(Base):
@@ -30,4 +31,4 @@ class Company(Base):
     reviewsCount = Column(Integer)
     totalReviewRating = Column(Integer)
     openings = Column(JSON)
-    reviews = relationship("Review", back_populates="company", cascade="all, delete")
+    reviews = relationship("Review", back_populates="company", cascade=ON_DELETE)

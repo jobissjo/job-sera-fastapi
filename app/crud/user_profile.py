@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session
 from app.schemas.user_profile import (EducationType, Language, UserProfile, 
                                       CertificationType, OtherPreference, PersonalDetail,
                                       Experience)

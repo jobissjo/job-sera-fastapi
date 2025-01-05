@@ -1,13 +1,16 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Date, JSON
 from sqlalchemy.orm import relationship
 from app.core.database import Base
+from app.utils.constants import ON_DELETE
+
+USER_PROFILE_ID = "user_profiles.profileId"
 
 class PersonalDetail(Base):
     __tablename__ = 'personal_details'
 
 
     id = Column(Integer, primary_key=True, index=True)
-    userProfileId = Column(String, ForeignKey('user_profiles.profileId'))
+    userProfileId = Column(String, ForeignKey(USER_PROFILE_ID))
     name = Column(String)
     heading = Column(String)
     email = Column(String)
@@ -28,7 +31,7 @@ class OtherPreference(Base):
     __tablename__ = 'other_preferences'
 
     id = Column(Integer, primary_key=True, index=True)
-    userProfileId = Column(String, ForeignKey('user_profiles.profileId'))
+    userProfileId = Column(String, ForeignKey(USER_PROFILE_ID))
     jobType = Column(String)
 
     user_profile = relationship("UserProfile", back_populates="otherPreference")
@@ -37,7 +40,7 @@ class EducationType(Base):
     __tablename__ = 'education_types'
 
     id = Column(Integer, primary_key=True, index=True)
-    userProfileId = Column(String, ForeignKey('user_profiles.profileId'))
+    userProfileId = Column(String, ForeignKey(USER_PROFILE_ID))
     level = Column(String)
     fieldOfStudy = Column(String)
     startedDate = Column(Date)
@@ -49,7 +52,7 @@ class CertificationType(Base):
     __tablename__ = 'certification_types'
 
     id = Column(Integer, primary_key=True, index=True)
-    userProfileId = Column(String, ForeignKey('user_profiles.profileId'))
+    userProfileId = Column(String, ForeignKey(USER_PROFILE_ID))
     title = Column(String)
     certificateId = Column(String)
     mode = Column(String)
@@ -63,7 +66,7 @@ class Experience(Base):
     __tablename__ = 'experiences'
 
     id = Column(Integer, primary_key=True, index=True)
-    userProfileId = Column(String, ForeignKey('user_profiles.profileId'))
+    userProfileId = Column(String, ForeignKey(USER_PROFILE_ID))
     position = Column(String)
     companyName = Column(String)
     startDate = Column(Date)
@@ -75,7 +78,7 @@ class Language(Base):
     __tablename__ = 'languages'
 
     id = Column(Integer, primary_key=True, index=True)
-    userProfileId = Column(String, ForeignKey('user_profiles.profileId'))
+    userProfileId = Column(String, ForeignKey(USER_PROFILE_ID))
     language = Column(String)
     level = Column(String)
     reading = Column(Boolean)
@@ -88,11 +91,11 @@ class UserProfile(Base):
     __tablename__ = 'user_profiles'
 
     profileId = Column(String, primary_key=True, index=True)
-    personalDetail = relationship("PersonalDetail", uselist=False, back_populates="user_profile", cascade="all, delete")
-    otherPreference = relationship("OtherPreference", uselist=False, back_populates="user_profile", cascade="all, delete")
-    education = relationship("EducationType", back_populates="user_profile", cascade="all, delete")
-    certifications = relationship("CertificationType", back_populates="user_profile", cascade="all, delete")
-    experience = relationship("Experience", back_populates="user_profile", cascade="all, delete")
-    knownLanguages = relationship("Language", back_populates="user_profile", cascade="all, delete")
+    personalDetail = relationship("PersonalDetail", uselist=False, back_populates="user_profile", cascade=ON_DELETE)
+    otherPreference = relationship("OtherPreference", uselist=False, back_populates="user_profile", cascade=ON_DELETE)
+    education = relationship("EducationType", back_populates="user_profile", cascade=ON_DELETE)
+    certifications = relationship("CertificationType", back_populates="user_profile", cascade=ON_DELETE)
+    experience = relationship("Experience", back_populates="user_profile", cascade=ON_DELETE)
+    knownLanguages = relationship("Language", back_populates="user_profile", cascade=ON_DELETE)
     skills = Column(JSON)
     preferredLocations = Column(JSON)

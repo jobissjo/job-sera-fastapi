@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException,status
 from jose import JWTError, jwt
-from app.models.users import ResponseUserFull, TokenData, UserModel, ResponseUser
+from app.models.users import ResponseUserFull, TokenData,  ResponseUser
 from app.schemas.users import User
 from datetime import datetime, timedelta
 import datetime as dt
@@ -9,10 +9,9 @@ from sqlalchemy.orm import Session
 from ..core.database import get_db
 
 from passlib.context import CryptContext
+from app.core.env_config import SECRET_KEY, ALGORITHM
 
 
-SECRET_KEY = "hdhfh5jdnb7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-ALGORITHM = "HS256"
 
 
 

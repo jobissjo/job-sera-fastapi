@@ -1,6 +1,9 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from app.core.database import Base
+from app.utils.constants import ON_DELETE
+
+EMPLOYEE_PROFILE_ID = "employer_profiles.employer_id"
 
 class Address(Base):
     __tablename__ = 'addresses'
@@ -22,7 +25,7 @@ class PersonalEmployerInformation(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     employer_profile_id = Column(String, ForeignKey(
-        "employer_profiles.employer_id",
+        EMPLOYEE_PROFILE_ID,
         ondelete="CASCADE"
     ))
     firstName = Column(String)
@@ -30,7 +33,6 @@ class PersonalEmployerInformation(Base):
     username = Column(String)
     email = Column(String)
     phoneNumber = Column(String)
-    # password = Column(String)
     position = Column(String)
     socialMediaLink = Column(String)
     gender = Column(String)
@@ -44,7 +46,7 @@ class CompanyInformation(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     employer_profile_id = Column(String, ForeignKey(
-        "employer_profiles.employer_id"
+        EMPLOYEE_PROFILE_ID
     ))
     companyName = Column(String)
     industry = Column(String)
@@ -64,7 +66,7 @@ class AdditionalInformation(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     employer_profile_id = Column(String, ForeignKey(
-        "employer_profiles.employer_id"
+        EMPLOYEE_PROFILE_ID
     ))
     hearAboutUs = Column(String)
     agreedToTerms = Column(Boolean)
@@ -77,6 +79,6 @@ class EmployerProfile(Base):
     __tablename__ = 'employer_profiles'
 
     employer_id = Column(String, primary_key=True, index=True)
-    personalInformation = relationship("PersonalEmployerInformation", back_populates="employer_profile", cascade="all, delete")
-    companyInformation = relationship("CompanyInformation", back_populates="employer_profile", cascade="all, delete")
-    additionalInformation = relationship("AdditionalInformation", back_populates="employer_profile", cascade="all, delete")
+    personalInformation = relationship("PersonalEmployerInformation", back_populates="employer_profile", cascade=ON_DELETE)
+    companyInformation = relationship("CompanyInformation", back_populates="employer_profile", cascade=ON_DELETE)
+    additionalInformation = relationship("AdditionalInformation", back_populates="employer_profile", cascade=ON_DELETE)
