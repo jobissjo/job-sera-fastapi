@@ -2,10 +2,12 @@ from fastapi import Depends, status,APIRouter, HTTPException
 from app.models.company import CompanyModel
 from sqlalchemy.orm import Session, joinedload
 from app.utils.auth import get_current_employer
-from app.utils.database import get_db
+from app.core.database import get_db
 from app.schemas.company import Review, Company
+from app.utils.constants import COMPANY_NOT_FOUND
 
-router = APIRouter(prefix='/company', tags=['company'])
+
+router = APIRouter(prefix='/company', tags=['Company'])
 
 
 @router.post('/')
@@ -37,33 +39,13 @@ async def get_companies(db: Session= Depends(get_db)):
 async def get_company_id(company_id:str, db:Session = Depends(get_db)):
     company = db.query(Company).filter(Company.id == company_id).first()
     if not company:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not founded")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=COMPANY_NOT_FOUND)
     return company
 
 def company_to_dict(company):
     return {column.name: getattr(company, column.name) for column in company.__table__.columns}
 
 
-# @router.put('/{company_id}')
-# async def update_company(company_id:str,updated_company_detail:CompanyModel, db:Session = Depends(get_db), 
-#                          current_employer:Session = Depends(get_current_employer)):
-#     company = db.query(Company).filter(Company.id == company_id).first()
-#     if not company:
-#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not founded")
-
-    
-#     company.address = updated_company_detail.address
-#     company.companyName = updated_company_detail.companyName
-#     company.employeesCount = updated_company_detail.employeesCount
-#     company.landmark = updated_company_detail.landmark
-#     company.openings = updated_company_detail.openings
-    
-#     company.totalReviewRating = updated_company_detail.totalReviewRating
-#     company.reviewsCount = updated_company_detail.reviewsCount
-#     company.reviews = [Review(**review, company_id=company.id) for review in updated_company_detail.reviews]
-#     db.commit()
-#     db.refresh(company)
-#     return company
 
 
 @router.put('/{company_id}')
@@ -72,7 +54,7 @@ async def update_company(company_id: str, updated_company_detail: CompanyModel, 
     # Fetch the company object from the database
     company = db.query(Company).filter(Company.id == company_id).first()
     if not company:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=COMPANY_NOT_FOUND)
 
     # Update company attributes
     
@@ -94,7 +76,7 @@ async def delete_company(company_id:str, db:Session = Depends(get_db),
                          current_employer:Session = Depends(get_current_employer)):
     company = db.query(Company).options(joinedload(Company.reviews)).filter(Company.id == company_id).first()
     if not company:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Company not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=COMPANY_NOT_FOUND)
 
     db.delete(company)
     db.commit()

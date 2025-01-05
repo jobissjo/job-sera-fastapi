@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Body
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from app.models.user_notification import UserNotificationModel, UserNotificationResponse
-from app.utils.database import get_db
+from app.core.database import get_db
 from app.schemas.user_notification import UserNotification
 from app.utils.auth import get_current_active_user
 from app.models.users import ResponseUser
@@ -31,7 +31,7 @@ async def create_notification(user_notification_data:UserNotificationModel,
 async def get_notification_by_job_post(position: str, db: Session = Depends(get_db), current_user: ResponseUser = Depends(get_current_active_user)):
     notifications_query = db.query(UserNotification).filter(UserNotification.position.like(f"%{position}%"))
 
-    notifications_query = notifications_query.filter(or_(UserNotification.userId == '', UserNotification.userId == None))
+    notifications_query = notifications_query.filter(or_(UserNotification.userId == '', UserNotification.userId.is_(None)))
 
     notifications = notifications_query.filter(~UserNotification.deleteOrResponded.contains(current_user.id)).all()
 
@@ -75,7 +75,7 @@ async def ger_notification_of_user( user_id: str, db: Session = Depends(get_db),
 
 
 @router.delete('/{notify_id}/users/{user_id}')
-async def delete_notification_of_user(notify_id:str, user_id: str, db: Session = Depends(get_db), current_user:ResponseUser = Depends(get_current_active_user)):
+async def delete_notification_of_user_by_id(notify_id:str, user_id: str, db: Session = Depends(get_db), current_user:ResponseUser = Depends(get_current_active_user)):
     # Query the notification
     notification = db.query(UserNotification).filter(UserNotification.id == notify_id,UserNotification.userId == user_id).first()
 

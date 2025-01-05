@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import MetaData
 from sqlalchemy.orm import Session
 from datetime import timedelta
-from app.models.users import ResponseUserFull, TokenData, TokenModel, UserModel, CreateUserModel, ResponseUser
+from app.models.users import ResponseUserFull,  TokenModel, UserModel, CreateUserModel, ResponseUser
 from app.schemas.users import User, users_table
-from app.utils.database import get_db, create_table
+from app.core.database import get_db, create_table
 from app.utils.auth import (get_user, get_email, get_current_active_user,
                             get_password_hash, authenticate_user, create_access_token, verify_password)
 from fastapi.security import OAuth2PasswordRequestForm
@@ -80,7 +80,4 @@ async def change_password(old_password: str, new_password: str,  db: Session = D
 
     return {"message": "Password updated successfully"}
 
-# current_user: UserModel = Depends(get_current_active_user)
-# @router.get("/users/me/items", response_model=dict[str,int])
-# async def read_own_items():
-#     return {"item_id": 1}
+

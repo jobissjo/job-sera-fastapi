@@ -1,5 +1,5 @@
 from fastapi import  FastAPI, UploadFile, File
-from app.utils.database import Base, engine
+from app.core.database import Base, engine
 from typing import Annotated
 from app.routes import (user, jobs,user_profile, employer,company, job_applications,
                         saved_jobs, user_notification)
@@ -50,6 +50,6 @@ app.include_router(job_applications.router)
 app.include_router(saved_jobs.router)
 app.include_router(user_notification.router)
 
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 

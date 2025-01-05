@@ -1,12 +1,8 @@
-from typing import Annotated, Optional
-from fastapi import Depends, Form, Response, status,APIRouter, HTTPException, File, UploadFile
+from fastapi import Depends,  Response, APIRouter, HTTPException, File, UploadFile
 from app.models.job_applications import JobApplicationModel, ResponseJobApplication
-from app.models.users import ResponseUser
 from app.schemas.job_applications import JobApplication
-from app.utils.auth import get_current_active_user
-from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from app.utils.database import get_db
+from app.core.database import get_db
 import os
 import uuid
 

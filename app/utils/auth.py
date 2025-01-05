@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import datetime as dt
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from .database import get_db
+from ..core.database import get_db
 
 from passlib.context import CryptContext
 

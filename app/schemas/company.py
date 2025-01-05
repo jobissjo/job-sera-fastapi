@@ -1,5 +1,5 @@
 import uuid
-from app.utils.database import Base
+from app.core.database import Base
 from sqlalchemy import Column, String,Integer,CHAR, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 

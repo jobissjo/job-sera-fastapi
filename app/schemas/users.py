@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean, MetaData, Table
-from app.utils.database import Base
+from app.core.database import Base
 import uuid
 from sqlalchemy.types import CHAR 
 

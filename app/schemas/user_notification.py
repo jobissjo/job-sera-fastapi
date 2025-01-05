@@ -1,7 +1,7 @@
 import uuid
 from sqlalchemy import Column,String, JSON, DateTime
 from sqlalchemy.types import CHAR
-from app.utils.database import Base
+from app.core.database import Base
 from datetime import datetime
 import datetime as dt
 

@@ -1,14 +1,14 @@
 from fastapi import Depends, status,APIRouter, HTTPException
 from sqlalchemy.orm import Session, joinedload
 from app.models.employer import EmployerProfileType, ResponseEmployerProfileType
-from app.utils.database import get_db
-from app.models.users import UserModel, ResponseUser
+from app.core.database import get_db
+from app.models.users import  ResponseUser
 from app.utils.auth import get_current_active_user
 from app.schemas.employer import Address, CompanyInformation, PersonalEmployerInformation,AdditionalInformation, EmployerProfile
-from app.utils.employer import employer_profile_model_schemas
-from app.crud.employer import update_employer_profile, delete_employer_profile
+from app.crud.employer import delete_employer_profile
+from app.utils.constants import EMPLOYER_PROFILE_NOT_FOUND
 
-router = APIRouter(prefix='/employer', tags=['employer'])
+router = APIRouter(prefix='/employer', tags=['Employer'])
 
 
 
@@ -77,7 +77,7 @@ async def get_employer_by_id(employer_id: str, db: Session = Depends(get_db)):
     ).filter(EmployerProfile.employer_id == employer_id).first()
     # Check if the employer profile exists
     if not employer_profile:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Employer profile not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=EMPLOYER_PROFILE_NOT_FOUND)
     return employer_profile
 
 
@@ -90,7 +90,7 @@ async def update_employer(employer_id: str, updated_employer: EmployerProfileTyp
     employer_profile = get_by_id(employer_id, db)
 
     if not employer_profile:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Employer profile not found") 
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=EMPLOYER_PROFILE_NOT_FOUND) 
 
     employer_profile.personalInformation = [PersonalEmployerInformation(**updated_employer.personalInformation.dict())]
     company_info_data = updated_employer.companyInformation.dict()
@@ -111,7 +111,7 @@ async def delete_employer(employer_id: str, _current_user:Session= Depends(get_c
     employer_profile = get_by_id(employer_id, db)
 
     if not employer_profile:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Employer profile not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=EMPLOYER_PROFILE_NOT_FOUND)
     delete_employer_profile(db,employer_profile)
 
     return {'message': 'Employer Profile deleted successfully'}
