@@ -11,6 +11,7 @@ from ..core.database import get_db
 from passlib.context import CryptContext
 from app.core.env_config import SECRET_KEY, ALGORITHM
 
+from sqlalchemy.future import select
 
 
 
@@ -18,19 +19,21 @@ from app.core.env_config import SECRET_KEY, ALGORITHM
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated='auto')
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-def verify_password(plain_password: str, hashed_password: str):
+async def verify_password(plain_password: str, hashed_password: str):
     return pwd_context.verify(plain_password, hashed_password)
 
-def get_password_hash(password: str):
+async def get_password_hash(password: str):
     return pwd_context.hash(password)
 
-def get_user(db, username: str):
-    return db.query(User).filter(User.username == username).first()
+async def get_user(db, username: str):
+    result = await db.execute(select(User).filter(User.username == username))
+    return result.scalars().first()
 
-def get_email(db, email: str):
-    return db.query(User).filter(User.email == email).first()
+async def get_email(db, email: str):
+    result = await db.execute(select(User).filter(User.email == email))
+    return result.scalars().first()
 
-def authenticate_user(db, username: str, password: str):
+async def authenticate_user(db, username: str, password: str):
     user = get_user(db, username)
     if not user:
         return False
@@ -38,7 +41,7 @@ def authenticate_user(db, username: str, password: str):
         return False
     return user
 
-def create_access_token(data: dict, expires_delta:timedelta | None = None):
+async def create_access_token(data: dict, expires_delta:timedelta | None = None):
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(dt.UTC) + expires_delta

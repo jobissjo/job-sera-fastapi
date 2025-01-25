@@ -29,7 +29,7 @@ def employer_profile_model_schemas(employer_profile_model: EmployerProfileType) 
     )
 
     # Create AdditionalInformation object
-    additional_information = AdditionalInformation(**additional_information_data.dict(), employer_profile_id=employer_id)
+    additional_information = AdditionalInformation(**additional_information_data.model_dump(), employer_profile_id=employer_id)
 
     # Create EmployerProfile object
     employer_profile = EmployerProfile(

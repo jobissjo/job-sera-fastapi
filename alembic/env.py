@@ -8,14 +8,14 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 from app.core.database import SQLALCHEMY_DATABASE_URL, Base
 
-from app.schema.employer import *
-from app.schema.company import *
-from app.schema.job_applications import *
-from app.schema.jobs import *
-from app.schema.saved_jobs import *
-from app.schema.user_notification import *
-from app.schema.user_profile import *
-from app.schema.users import *
+from app.models.employer import *
+from app.models.company import *
+from app.models.job_applications import *
+from app.models.jobs import *
+from app.models.saved_jobs import *
+from app.models.user_notification import *
+from app.models.user_profile import *
+from app.models.users import *
 
 
 # this is the Alembic Config object, which provides

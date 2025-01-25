@@ -23,3 +23,7 @@ class ResponseUser(UserModel):
 
 class ResponseUserFull(ResponseUser):
     hashed_password:str
+
+class VerifyAccount(BaseModel):
+    email:str
+    otp:str

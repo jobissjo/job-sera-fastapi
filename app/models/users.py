@@ -14,6 +14,13 @@ class User(Base):
     hashed_password = Column(String)
     active = Column(Boolean, default=True)
     role = Column(String, default="user")
+    is_deleted = Column(Boolean, default=False)
+
+class TempOTP(Base):
+    __tablename__ = "temp_otp"
+    id = Column(CHAR(36), primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
+    email = Column(CHAR(36), unique=True, index=True)
+    otp = Column(CHAR(6))
 
 metadata = MetaData()
 
