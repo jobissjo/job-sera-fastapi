@@ -2,15 +2,15 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import MetaData
 from sqlalchemy.orm import Session
 from datetime import timedelta
-from app.models.users import ResponseUserFull,  TokenModel, UserModel, CreateUserModel, ResponseUser
-from app.schemas.users import User, users_table
+from app.schema.users import ResponseUserFull,  TokenModel, UserModel, CreateUserModel, ResponseUser
+from app.models.users import User, users_table
 from app.core.database import get_db, create_table
 from app.utils.auth import (get_user, get_email, get_current_active_user,
                             get_password_hash, authenticate_user, create_access_token, verify_password)
 from fastapi.security import OAuth2PasswordRequestForm
 
 
-router = APIRouter(tags=["users"])
+router = APIRouter(tags=["Users"])
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 metadata = MetaData()

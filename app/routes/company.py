@@ -1,9 +1,9 @@
 from fastapi import Depends, status,APIRouter, HTTPException
-from app.models.company import CompanyModel
+from app.schema.company import CompanyModel
 from sqlalchemy.orm import Session, joinedload
 from app.utils.auth import get_current_employer
 from app.core.database import get_db
-from app.schemas.company import Review, Company
+from app.models.company import Review, Company
 from app.utils.constants import COMPANY_NOT_FOUND
 
 

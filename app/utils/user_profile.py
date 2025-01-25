@@ -1,6 +1,6 @@
 
-from app.schemas.user_profile import UserProfile,PersonalDetail, OtherPreference, EducationType, CertificationType, Experience, Language
-from app.models.user_profile import UserProfileModel
+from app.models.user_profile import UserProfile,PersonalDetail, OtherPreference, EducationType, CertificationType, Experience, Language
+from app.schema.user_profile import UserProfileModel
 
 
 

@@ -1,10 +1,10 @@
 from fastapi import Depends, status,APIRouter, HTTPException
 from sqlalchemy.orm import Session, joinedload
-from app.models.employer import EmployerProfileType, ResponseEmployerProfileType
+from app.schema.employer import EmployerProfileType, ResponseEmployerProfileType
 from app.core.database import get_db
-from app.models.users import  ResponseUser
+from app.schema.users import  ResponseUser
 from app.utils.auth import get_current_active_user
-from app.schemas.employer import Address, CompanyInformation, PersonalEmployerInformation,AdditionalInformation, EmployerProfile
+from app.models.employer import Address, CompanyInformation, PersonalEmployerInformation,AdditionalInformation, EmployerProfile
 from app.crud.employer import delete_employer_profile
 from app.utils.constants import EMPLOYER_PROFILE_NOT_FOUND
 

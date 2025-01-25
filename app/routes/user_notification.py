@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Body
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
-from app.models.user_notification import UserNotificationModel, UserNotificationResponse
+from app.schema.user_notification import UserNotificationModel, UserNotificationResponse
 from app.core.database import get_db
-from app.schemas.user_notification import UserNotification
+from app.models.user_notification import UserNotification
 from app.utils.auth import get_current_active_user
-from app.models.users import ResponseUser
+from app.schema.users import ResponseUser
 
-router = APIRouter(prefix='/notification', tags=['notification'])
+router = APIRouter(prefix='/notification', tags=['Notification'])
 
 
 @router.post('/', response_model=UserNotificationResponse)

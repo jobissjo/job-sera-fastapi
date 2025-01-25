@@ -1,25 +1,31 @@
-from pydantic import BaseModel
+from sqlalchemy import Column, Integer, String, Boolean, MetaData, Table
+from app.core.database import Base
+import uuid
+from sqlalchemy.types import CHAR 
 
 
-class TokenModel(BaseModel):
-    access_token: str
-    token_type: str
 
-class TokenData(BaseModel):
-    username: str | None = None
+class User(Base):
+    __tablename__ = "users"
 
-class UserModel(BaseModel):
+    id = Column(CHAR(36), primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
+    username = Column(String, unique=True, index=True)
+    email = Column(String, index=True)
+    hashed_password = Column(String)
+    active = Column(Boolean, default=True)
+    role = Column(String, default="user")
 
-    username: str
-    email: str
-    active: bool = True
-    role: str = "user"
+metadata = MetaData()
 
-class CreateUserModel(UserModel):
-    password: str
-
-class ResponseUser(UserModel):
-    id:str
-
-class ResponseUserFull(ResponseUser):
-    hashed_password:str
+users_table = Table(
+    "users",
+    metadata,
+    Column('id', CHAR(36), primary_key=True, 
+           default=lambda: str(uuid.uuid4())),
+    Column('username', String),
+    Column('email', String),
+    Column('hashed_password', String),
+    Column('active', Boolean, default=True),
+    Column('role', String, default="user")
+           
+)

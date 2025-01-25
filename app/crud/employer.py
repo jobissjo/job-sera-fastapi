@@ -1,5 +1,5 @@
-from app.schemas.employer import EmployerProfile
-from app.models.employer import EmployerProfileType
+from app.models.employer import EmployerProfile
+from app.schema.employer import EmployerProfileType
 from sqlalchemy.orm import Session
 
 def update_employer_profile(db:Session, employer_profile: EmployerProfile, updated_employer:EmployerProfileType):

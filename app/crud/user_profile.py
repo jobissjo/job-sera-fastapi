@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
-from app.schemas.user_profile import (EducationType, Language, UserProfile, 
+from app.models.user_profile import (EducationType, Language, UserProfile, 
                                       CertificationType, OtherPreference, PersonalDetail,
                                       Experience)
-from app.models.user_profile import UserProfileModel
+from app.schema.user_profile import UserProfileModel
 
 
 

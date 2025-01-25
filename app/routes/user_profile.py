@@ -1,16 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from app.models.user_profile import UserProfileModel
-from app.models.users import UserModel
+from app.schema.user_profile import UserProfileModel
+from app.schema.users import UserModel
 from sqlalchemy.orm import Session, joinedload
 from app.core.database import get_db
 from app.utils.auth import get_current_active_user
 from app.utils.user_profile import profile_model_schemas
 from app.crud.user_profile import update_user_profile, delete_user_profile
-from app.schemas.user_profile import UserProfile
+from app.models.user_profile import UserProfile
 from app.utils.constants import USER_PROFILE_NOT_FOUND
 
 
-router = APIRouter(prefix='/user-profile',tags=["user profile"])
+router = APIRouter(prefix='/user-profile',tags=["User Profile"])
 
 
 @router.post('/', response_model=UserProfileModel)

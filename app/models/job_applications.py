@@ -1,25 +1,26 @@
-from pydantic import BaseModel,PydanticUserError
-from typing import Annotated, Optional
-from fastapi import File, UploadFile
-from datetime import date
+from sqlalchemy import Column, Integer, String, Boolean,Date
+from app.core.database import Base
+from sqlalchemy.types import CHAR
+import uuid
+import datetime
 
-class JobApplicationModel(BaseModel):
-    name:str
-    email:str
-    phoneNumber:str
-    location:str
-    jobId:str
-    userId:str
-    ableToCommute:bool
-    highQualification:str
-    experience:int
-    coverLetter:str
-    interviewDates:str
-    resumePath:str
-    role:str
-    company:str
-    status:str
+class JobApplication(Base):
+    __tablename__ = 'job_applications'
 
-class ResponseJobApplication(JobApplicationModel):
-    id:str
-    appliedOn:date
+    id = Column(CHAR(36), primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String)
+    email = Column(String)
+    phoneNumber = Column(String)
+    location = Column(String)
+    jobId = Column(String)
+    userId = Column(String)
+    ableToCommute = Column(Boolean)
+    highQualification = Column(String)
+    experience = Column(Integer)
+    coverLetter = Column(String)
+    interviewDates = Column(String)
+    resumePath = Column(String)
+    role = Column(String)
+    company = Column(String)
+    status = Column(String)
+    appliedOn = Column(Date, default=datetime.date.today)

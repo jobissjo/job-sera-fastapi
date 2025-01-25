@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException,status
 from jose import JWTError, jwt
-from app.models.users import ResponseUserFull, TokenData,  ResponseUser
-from app.schemas.users import User
+from app.schema.users import ResponseUserFull, TokenData,  ResponseUser
+from app.models.users import User
 from datetime import datetime, timedelta
 import datetime as dt
 from fastapi.security import OAuth2PasswordBearer

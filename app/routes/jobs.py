@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from app.models.jobs import JobModel,CreateJobModel, ResponseJobModel
+from app.schema.jobs import JobModel,CreateJobModel, ResponseJobModel
 from sqlalchemy.orm import Session
-from app.models.users import ResponseUser
-from app.schemas.jobs import Job, jobs_table
+from app.schema.users import ResponseUser
+from app.models.jobs import Job, jobs_table
 from app.core.database import get_db, create_table
 from sqlalchemy import MetaData, desc
 from app.utils.auth import  get_current_employer
 from typing import Optional
 
-router = APIRouter(prefix='/jobs', tags=['jobs'])
+router = APIRouter(prefix='/jobs', tags=['Jobs'])
 metadata = MetaData()
 
 JOB_NOT_FOUND = "Job not found"

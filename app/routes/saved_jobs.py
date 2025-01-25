@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from app.models.jobs import ResponseJobModel
-from app.models.saved_jobs import SavedJobModel
+from app.schema.jobs import ResponseJobModel
+from app.schema.saved_jobs import SavedJobModel
 from sqlalchemy.orm import Session
-from app.models.users import ResponseUser
-from app.schemas.saved_jobs import SavedJobs
+from app.schema.users import ResponseUser
+from app.models.saved_jobs import SavedJobs
 from app.core.database import get_db
 from sqlalchemy import MetaData
 from app.utils.auth import get_current_active_user

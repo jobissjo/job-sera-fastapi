@@ -1,5 +1,5 @@
-from app.schemas.employer import Address, CompanyInformation, PersonalEmployerInformation,AdditionalInformation, EmployerProfile
-from app.models.employer import EmployerProfileType
+from app.models.employer import Address, CompanyInformation, PersonalEmployerInformation,AdditionalInformation, EmployerProfile
+from app.schema.employer import EmployerProfileType
 def employer_profile_model_schemas(employer_profile_model: EmployerProfileType) -> EmployerProfile:
     employer_id = employer_profile_model.employer_id
     personal_information_data = employer_profile_model.personalInformation

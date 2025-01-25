@@ -1,12 +1,12 @@
 from fastapi import Depends,  Response, APIRouter, HTTPException, File, UploadFile
-from app.models.job_applications import JobApplicationModel, ResponseJobApplication
-from app.schemas.job_applications import JobApplication
+from app.schema.job_applications import JobApplicationModel, ResponseJobApplication
+from app.models.job_applications import JobApplication
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 import os
 import uuid
 
-router = APIRouter(prefix="/job-application", tags=['job_application'])
+router = APIRouter(prefix="/job-application", tags=['Job Application'])
 
 
 @router.post('/', response_model=ResponseJobApplication)
