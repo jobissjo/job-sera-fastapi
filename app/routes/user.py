@@ -10,7 +10,7 @@ from app.services.user_service import UserService
 
 
 router = APIRouter(tags=["Users"])
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
 
 metadata = MetaData()
 
