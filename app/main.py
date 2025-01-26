@@ -22,12 +22,9 @@ app.add_middleware(
     allow_headers=["*"],  
 )
 
-
-class MyDate(BaseModel):
-    date:date
-@app.post("/whatever")
-async def create_file(date: MyDate):
-    return {"file_size": date}
+@app.get('/')
+async def welcome_application():
+    return {'message': 'Welcome to FastAPI application'}
 
 app.include_router(user.router)
 app.include_router(jobs.router)
