@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 
 
-class UserNotificationModel(BaseModel):
+class UserNotificationSchema(BaseModel):
     notificationType:str
     title:str
     message:str
@@ -12,6 +12,6 @@ class UserNotificationModel(BaseModel):
     companyName:str
     deleteOrResponded: list[str] = []
 
-class UserNotificationResponse(UserNotificationModel):
+class UserNotificationResponse(UserNotificationSchema):
     id:str
     createdDate:datetime 
