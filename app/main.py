@@ -2,8 +2,7 @@ from fastapi import  FastAPI
 from app.routes import (user, jobs,user_profile, employer,company, job_applications,
                         saved_jobs, user_notification)
 from fastapi.middleware.cors import CORSMiddleware
-from datetime import date
-from pydantic import BaseModel
+
 
 app = FastAPI()
 
