@@ -1,5 +1,5 @@
 from app.schema.jobs import JobModel
 
-class SavedJobModel(JobModel):
+class SavedJobSchema(JobModel):
     jobId:str
     userId:str
