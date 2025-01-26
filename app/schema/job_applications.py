@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from datetime import date
 
-class JobApplicationModel(BaseModel):
+class JobApplicationSchema(BaseModel):
     name:str
     email:str
     phoneNumber:str
@@ -18,6 +18,6 @@ class JobApplicationModel(BaseModel):
     company:str
     status:str
 
-class ResponseJobApplication(JobApplicationModel):
+class ResponseJobApplication(JobApplicationSchema):
     id:str
     appliedOn:date
