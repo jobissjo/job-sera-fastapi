@@ -1,8 +1,8 @@
-from sqlalchemy import Column, Integer, String, Boolean, MetaData, Table
+from sqlalchemy import Column,  String, Boolean, MetaData, Table
+from sqlalchemy.orm import relationship
 from app.core.database import Base
 import uuid
 from sqlalchemy.types import CHAR 
-
 
 
 class User(Base):
@@ -15,6 +15,7 @@ class User(Base):
     active = Column(Boolean, default=True)
     role = Column(String, default="user")
     is_deleted = Column(Boolean, default=False)
+    profile = relationship("UserProfile", back_populates="user", uselist=False)
 
 class TempOTP(Base):
     __tablename__ = "temp_otp"

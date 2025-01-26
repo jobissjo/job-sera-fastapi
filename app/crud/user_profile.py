@@ -29,6 +29,4 @@ def update_user_profile(db: Session, user_profile: UserProfile,
     return user_profile
 
 
-def delete_user_profile(db: Session, user_profile: UserProfile):
-    db.delete(user_profile)
-    db.commit()
+

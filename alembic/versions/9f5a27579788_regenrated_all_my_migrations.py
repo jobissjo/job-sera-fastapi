@@ -1,8 +1,8 @@
-"""create mot created model
+"""regenrated all my migrations
 
-Revision ID: 77a9bd345503
-Revises: 6a7686e21955
-Create Date: 2025-01-25 19:28:56.845307
+Revision ID: 9f5a27579788
+Revises: 
+Create Date: 2025-01-26 11:55:47.821117
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '77a9bd345503'
-down_revision: Union[str, None] = '6a7686e21955'
+revision: str = '9f5a27579788'
+down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -94,6 +94,14 @@ def upgrade() -> None:
     )
     op.create_index(op.f('ix_saved_jobs_id'), 'saved_jobs', ['id'], unique=False)
     op.create_index(op.f('ix_saved_jobs_jobTitle'), 'saved_jobs', ['jobTitle'], unique=False)
+    op.create_table('temp_otp',
+    sa.Column('id', sa.CHAR(length=36), nullable=False),
+    sa.Column('email', sa.CHAR(length=36), nullable=True),
+    sa.Column('otp', sa.CHAR(length=6), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_temp_otp_email'), 'temp_otp', ['email'], unique=True)
+    op.create_index(op.f('ix_temp_otp_id'), 'temp_otp', ['id'], unique=False)
     op.create_table('user_notification',
     sa.Column('id', sa.CHAR(length=36), nullable=False),
     sa.Column('notificationType', sa.String(), nullable=True),
@@ -122,6 +130,7 @@ def upgrade() -> None:
     sa.Column('hashed_password', sa.String(), nullable=True),
     sa.Column('active', sa.Boolean(), nullable=True),
     sa.Column('role', sa.String(), nullable=True),
+    sa.Column('is_deleted', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=False)
@@ -297,6 +306,9 @@ def downgrade() -> None:
     op.drop_table('user_profiles')
     op.drop_index(op.f('ix_user_notification_id'), table_name='user_notification')
     op.drop_table('user_notification')
+    op.drop_index(op.f('ix_temp_otp_id'), table_name='temp_otp')
+    op.drop_index(op.f('ix_temp_otp_email'), table_name='temp_otp')
+    op.drop_table('temp_otp')
     op.drop_index(op.f('ix_saved_jobs_jobTitle'), table_name='saved_jobs')
     op.drop_index(op.f('ix_saved_jobs_id'), table_name='saved_jobs')
     op.drop_table('saved_jobs')

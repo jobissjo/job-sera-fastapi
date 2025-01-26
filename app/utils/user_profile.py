@@ -4,7 +4,7 @@ from app.schema.user_profile import UserProfileModel
 
 
 
-def profile_model_schemas(user_profile_model:UserProfileModel)->UserProfile:
+async def profile_model_schemas(user_profile_model:UserProfileModel)->UserProfile:
     profile_id = user_profile_model.profileId
     personal_detail_data = user_profile_model.personalDetail
     education_data = user_profile_model.education

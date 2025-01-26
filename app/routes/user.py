@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import MetaData
 from sqlalchemy.orm import Session
 
 from app.schema.users import ResponseUserFull,  TokenModel, UserModel, CreateUserModel, ResponseUser, VerifyAccount
@@ -12,7 +11,7 @@ from app.services import UserService
 router = APIRouter(tags=["Users"])
 
 
-metadata = MetaData()
+
 
 @router.post("/users/", response_model=ResponseUser)
 async def create_user(user: CreateUserModel, db: Session = Depends(get_db)):
