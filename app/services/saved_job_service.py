@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.models.saved_jobs import SavedJobs
 from app.schema.saved_jobs import SavedJobSchema
 from sqlalchemy.future import select
-from utils.constants import JOB_NOT_FOUND
+from app.utils.constants import JOB_NOT_FOUND
 
 
 class SavedJobService:

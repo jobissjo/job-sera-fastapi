@@ -1,5 +1,5 @@
 from fastapi import UploadFile, HTTPException
-from requests import Session
+from sqlalchemy.orm import Session
 from app.models.job_applications import JobApplication
 from app.schema.job_applications import JobApplicationSchema
 import os
