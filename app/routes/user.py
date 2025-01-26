@@ -6,7 +6,7 @@ from app.schema.users import ResponseUserFull,  TokenModel, UserModel, CreateUse
 from app.core.database import get_db
 from app.utils.auth import  get_current_active_user
 from fastapi.security import OAuth2PasswordRequestForm
-from app.services.user_service import UserService
+from app.services import UserService
 
 
 router = APIRouter(tags=["Users"])

@@ -7,6 +7,7 @@ from app.utils.auth import get_email, get_password_hash, get_user, verify_passwo
 from app.utils.auth import authenticate_user, create_access_token
 from datetime import timedelta
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
 class UserService:
     @staticmethod
     async def verify_account(data:VerifyAccount, db):

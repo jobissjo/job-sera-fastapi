@@ -2,11 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app.schema.jobs import JobModel,CreateJobModel, ResponseJobModel
 from sqlalchemy.orm import Session
 from app.schema.users import ResponseUser
-from app.models.jobs import Job, jobs_table
-from app.core.database import get_db, create_table
-from sqlalchemy import MetaData, desc
+from app.models.jobs import Job
+from app.core.database import get_db
+from sqlalchemy import MetaData
 from app.utils.auth import  get_current_employer
 from typing import Optional
+from app.services import JobService
 
 router = APIRouter(prefix='/jobs', tags=['Jobs'])
 metadata = MetaData()
@@ -16,50 +17,30 @@ JOB_NOT_FOUND = "Job not found"
 @router.post('/', response_model=ResponseJobModel)
 async def create_job(job_model:CreateJobModel, db:Session = Depends(get_db), 
                      current_employer:ResponseUser = Depends(get_current_employer)):
-    if 'jobs' not in metadata.tables:
-        create_table(jobs_table)
+
     
     if current_employer.role != "employer":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Only employer can create a job")
 
-    job = Job(jobTitle=job_model.jobTitle, company=job_model.company,
-              location=job_model.location, description=job_model.description,
-              shift=job_model.shift, jobType=job_model.jobType,
-              salary=job_model.salary,skills=job_model.skills,
-              experience=job_model.experience, qualifications= job_model.qualifications,
-              responsibilities = job_model.responsibilities, employerId=job_model.employerId)
-    db.add(job)
-    db.commit()
-    db.refresh(job)
-    return job
+    return await JobService.create_job(job_model, db)
 
 
 @router.get('/', response_model=list[ResponseJobModel])
-async def get_jobs(db:Session= Depends(get_db)):
-    jobs = db.query(Job).order_by(desc(Job.id)).limit(10).all()
-    return jobs
+async def get_jobs(db:Session= Depends(get_db),page_size:int=10,
+    page_number:int=1):
+    
+    return await JobService.get_jobs(db,page_size,page_number)
 
 @router.get('/search-result')
-def get_jobs_by_filters(job_title:str,location: Optional[str] = None, 
+async def get_jobs_by_filters(job_title:str,location: Optional[str] = None, 
                               experience: Optional[str] = None, db: Session = Depends(get_db)):
-    query = db.query(Job)
-    print(f"job title: {job_title}, location : {location}, experience : {experience}")
-    if job_title:
-        query = query.filter(Job.jobTitle.like(f'%{job_title}%'))
-    if location:
-        query = query.filter(Job.location.like(f"%{location}%") )
-    if experience:
-        query = query.filter(Job.experience == experience)
-    
-    return query.all()
+    return await JobService.search_jobs(job_title,location,experience,db)
 
 
 @router.get('/{id}', response_model=ResponseJobModel)
 async def get_job_by_id( id: str, db : Session= Depends(get_db)):
     
-    if 'jobs' not in metadata.tables:
-        create_table(jobs_table)
-    filtered_job = db.query(Job).filter(Job.id == id).first()
+    filtered_job = await JobService.get_job_by_id(id, db)
     if not filtered_job:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=JOB_NOT_FOUND)
     return filtered_job
@@ -75,48 +56,21 @@ async def get_job_by_employer_id(employer_id: str, db: Session = Depends(get_db)
 @router.put('/{id}',response_model=JobModel)
 async def update_job(id: str, job_model:JobModel, db:Session = Depends(get_db),
                      current_employer:ResponseUser = Depends(get_current_employer)):
-    if 'jobs' not in metadata.tables:
-        create_table(jobs_table)
-    job = db.query(Job).filter(Job.id == id).first()
-
-    if not job:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=JOB_NOT_FOUND)
-    if job.employerId != current_employer.id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You don not have access to modify this details")
     
-    job.jobTitle = job_model.jobTitle
-    job.company = job_model.company
-    job.location = job_model.location
-    job.description = job_model.description
-    job.shift = job_model.shift
-    job.salary = job_model.salary
-    job.jobType = job_model.jobType
-    job.experience = job_model.experience
-    job.qualifications = job_model.qualifications
-    job.responsibilities = job_model.responsibilities
-
-    db.commit()
-    db.refresh(job)
-
-    return job
+    error_message, response = await JobService.update_job(id, job_model, db, current_employer)
+    if error_message:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error_message)
+    return response
 
 
 @router.delete('/{id}')
 async def delete_job(id:str, db:Session= Depends(get_db),
                       current_employer:ResponseUser = Depends(get_current_employer)):
-    if 'jobs' not in metadata.tables:
-        create_table(jobs_table)
-    job = db.query(Job).filter(Job.id == id).first()
 
-    if not job:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=JOB_NOT_FOUND)
-    if job.employerId != current_employer.id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You don not have access to modify this details")
-    
-    db.delete(job)
-    db.commit()
-
-    return {"message", "Job deleted successfully"}
+    error_message, response = await JobService.delete_job(id, db,  current_employer)
+    if error_message:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error_message)
+    return response
 
 
 
