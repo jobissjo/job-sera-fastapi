@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, MetaData, String, JSON, Table
+from sqlalchemy import Column,  MetaData, String, JSON, Table
 from app.core.database import Base
 from sqlalchemy.types import CHAR
 import uuid

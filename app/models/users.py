@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from app.core.database import Base
 import uuid
 from sqlalchemy.types import CHAR 
+from app.models.user_profile import UserProfile
 
 
 class User(Base):

@@ -92,6 +92,7 @@ class UserProfile(Base):
 
     profileId = Column(String, primary_key=True, index=True)
     personalDetail = relationship("PersonalDetail", uselist=False, back_populates="user_profile", cascade=ON_DELETE)
+    userId = Column(Integer, ForeignKey("users.id"))
     otherPreference = relationship("OtherPreference", uselist=False, back_populates="user_profile", cascade=ON_DELETE)
     education = relationship("EducationType", back_populates="user_profile", cascade=ON_DELETE)
     certifications = relationship("CertificationType", back_populates="user_profile", cascade=ON_DELETE)
@@ -99,3 +100,5 @@ class UserProfile(Base):
     knownLanguages = relationship("Language", back_populates="user_profile", cascade=ON_DELETE)
     skills = Column(JSON)
     preferredLocations = Column(JSON)
+
+    user = relationship("User", back_populates="user_profile")

@@ -1,8 +1,8 @@
-"""regenrated all my migrations
+"""agina regenrated migrations
 
-Revision ID: 9f5a27579788
+Revision ID: 6da1807c5fe3
 Revises: 
-Create Date: 2025-01-26 11:55:47.821117
+Create Date: 2025-01-27 07:31:07.203372
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '9f5a27579788'
+revision: str = '6da1807c5fe3'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -116,13 +116,6 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_user_notification_id'), 'user_notification', ['id'], unique=False)
-    op.create_table('user_profiles',
-    sa.Column('profileId', sa.String(), nullable=False),
-    sa.Column('skills', sa.JSON(), nullable=True),
-    sa.Column('preferredLocations', sa.JSON(), nullable=True),
-    sa.PrimaryKeyConstraint('profileId')
-    )
-    op.create_index(op.f('ix_user_profiles_profileId'), 'user_profiles', ['profileId'], unique=False)
     op.create_table('users',
     sa.Column('id', sa.CHAR(length=36), nullable=False),
     sa.Column('username', sa.String(), nullable=True),
@@ -145,19 +138,6 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_additional_information_id'), 'additional_information', ['id'], unique=False)
-    op.create_table('certification_types',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('userProfileId', sa.String(), nullable=True),
-    sa.Column('title', sa.String(), nullable=True),
-    sa.Column('certificateId', sa.String(), nullable=True),
-    sa.Column('mode', sa.String(), nullable=True),
-    sa.Column('institution', sa.String(), nullable=True),
-    sa.Column('startDate', sa.Date(), nullable=True),
-    sa.Column('endDate', sa.Date(), nullable=True),
-    sa.ForeignKeyConstraint(['userProfileId'], ['user_profiles.profileId'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_index(op.f('ix_certification_types_id'), 'certification_types', ['id'], unique=False)
     op.create_table('company_information',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('employer_profile_id', sa.String(), nullable=True),
@@ -173,6 +153,66 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_company_information_id'), 'company_information', ['id'], unique=False)
+    op.create_table('personal_employer_information',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('employer_profile_id', sa.String(), nullable=True),
+    sa.Column('firstName', sa.String(), nullable=True),
+    sa.Column('lastName', sa.String(), nullable=True),
+    sa.Column('username', sa.String(), nullable=True),
+    sa.Column('email', sa.String(), nullable=True),
+    sa.Column('phoneNumber', sa.String(), nullable=True),
+    sa.Column('position', sa.String(), nullable=True),
+    sa.Column('socialMediaLink', sa.String(), nullable=True),
+    sa.Column('gender', sa.String(), nullable=True),
+    sa.ForeignKeyConstraint(['employer_profile_id'], ['employer_profiles.employer_id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_personal_employer_information_id'), 'personal_employer_information', ['id'], unique=False)
+    op.create_table('review',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('company_id', sa.String(), nullable=True),
+    sa.Column('username', sa.String(), nullable=True),
+    sa.Column('reviewText', sa.String(), nullable=True),
+    sa.Column('reviewScore', sa.Integer(), nullable=True),
+    sa.Column('reviewedDate', sa.String(), nullable=True),
+    sa.ForeignKeyConstraint(['company_id'], ['company.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('user_profiles',
+    sa.Column('profileId', sa.String(), nullable=False),
+    sa.Column('userId', sa.Integer(), nullable=True),
+    sa.Column('skills', sa.JSON(), nullable=True),
+    sa.Column('preferredLocations', sa.JSON(), nullable=True),
+    sa.ForeignKeyConstraint(['userId'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('profileId')
+    )
+    op.create_index(op.f('ix_user_profiles_profileId'), 'user_profiles', ['profileId'], unique=False)
+    op.create_table('addresses',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('company_info_id', sa.String(), nullable=True),
+    sa.Column('street', sa.String(), nullable=True),
+    sa.Column('city', sa.String(), nullable=True),
+    sa.Column('landmark', sa.String(), nullable=True),
+    sa.Column('state', sa.String(), nullable=True),
+    sa.Column('country', sa.String(), nullable=True),
+    sa.Column('postalCode', sa.String(), nullable=True),
+    sa.ForeignKeyConstraint(['company_info_id'], ['company_information.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_addresses_id'), 'addresses', ['id'], unique=False)
+    op.create_table('certification_types',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('userProfileId', sa.String(), nullable=True),
+    sa.Column('title', sa.String(), nullable=True),
+    sa.Column('certificateId', sa.String(), nullable=True),
+    sa.Column('mode', sa.String(), nullable=True),
+    sa.Column('institution', sa.String(), nullable=True),
+    sa.Column('startDate', sa.Date(), nullable=True),
+    sa.Column('endDate', sa.Date(), nullable=True),
+    sa.ForeignKeyConstraint(['userProfileId'], ['user_profiles.profileId'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_certification_types_id'), 'certification_types', ['id'], unique=False)
     op.create_table('education_types',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('userProfileId', sa.String(), nullable=True),
@@ -234,54 +274,11 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_personal_details_id'), 'personal_details', ['id'], unique=False)
-    op.create_table('personal_employer_information',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('employer_profile_id', sa.String(), nullable=True),
-    sa.Column('firstName', sa.String(), nullable=True),
-    sa.Column('lastName', sa.String(), nullable=True),
-    sa.Column('username', sa.String(), nullable=True),
-    sa.Column('email', sa.String(), nullable=True),
-    sa.Column('phoneNumber', sa.String(), nullable=True),
-    sa.Column('position', sa.String(), nullable=True),
-    sa.Column('socialMediaLink', sa.String(), nullable=True),
-    sa.Column('gender', sa.String(), nullable=True),
-    sa.ForeignKeyConstraint(['employer_profile_id'], ['employer_profiles.employer_id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_index(op.f('ix_personal_employer_information_id'), 'personal_employer_information', ['id'], unique=False)
-    op.create_table('review',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('company_id', sa.String(), nullable=True),
-    sa.Column('username', sa.String(), nullable=True),
-    sa.Column('reviewText', sa.String(), nullable=True),
-    sa.Column('reviewScore', sa.Integer(), nullable=True),
-    sa.Column('reviewedDate', sa.String(), nullable=True),
-    sa.ForeignKeyConstraint(['company_id'], ['company.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('addresses',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('company_info_id', sa.String(), nullable=True),
-    sa.Column('street', sa.String(), nullable=True),
-    sa.Column('city', sa.String(), nullable=True),
-    sa.Column('landmark', sa.String(), nullable=True),
-    sa.Column('state', sa.String(), nullable=True),
-    sa.Column('country', sa.String(), nullable=True),
-    sa.Column('postalCode', sa.String(), nullable=True),
-    sa.ForeignKeyConstraint(['company_info_id'], ['company_information.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_index(op.f('ix_addresses_id'), 'addresses', ['id'], unique=False)
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     # ### commands auto generated by Alembic - please adjust! ###
-    op.drop_index(op.f('ix_addresses_id'), table_name='addresses')
-    op.drop_table('addresses')
-    op.drop_table('review')
-    op.drop_index(op.f('ix_personal_employer_information_id'), table_name='personal_employer_information')
-    op.drop_table('personal_employer_information')
     op.drop_index(op.f('ix_personal_details_id'), table_name='personal_details')
     op.drop_table('personal_details')
     op.drop_index(op.f('ix_other_preferences_id'), table_name='other_preferences')
@@ -292,18 +289,23 @@ def downgrade() -> None:
     op.drop_table('experiences')
     op.drop_index(op.f('ix_education_types_id'), table_name='education_types')
     op.drop_table('education_types')
-    op.drop_index(op.f('ix_company_information_id'), table_name='company_information')
-    op.drop_table('company_information')
     op.drop_index(op.f('ix_certification_types_id'), table_name='certification_types')
     op.drop_table('certification_types')
+    op.drop_index(op.f('ix_addresses_id'), table_name='addresses')
+    op.drop_table('addresses')
+    op.drop_index(op.f('ix_user_profiles_profileId'), table_name='user_profiles')
+    op.drop_table('user_profiles')
+    op.drop_table('review')
+    op.drop_index(op.f('ix_personal_employer_information_id'), table_name='personal_employer_information')
+    op.drop_table('personal_employer_information')
+    op.drop_index(op.f('ix_company_information_id'), table_name='company_information')
+    op.drop_table('company_information')
     op.drop_index(op.f('ix_additional_information_id'), table_name='additional_information')
     op.drop_table('additional_information')
     op.drop_index(op.f('ix_users_username'), table_name='users')
     op.drop_index(op.f('ix_users_id'), table_name='users')
     op.drop_index(op.f('ix_users_email'), table_name='users')
     op.drop_table('users')
-    op.drop_index(op.f('ix_user_profiles_profileId'), table_name='user_profiles')
-    op.drop_table('user_profiles')
     op.drop_index(op.f('ix_user_notification_id'), table_name='user_notification')
     op.drop_table('user_notification')
     op.drop_index(op.f('ix_temp_otp_id'), table_name='temp_otp')

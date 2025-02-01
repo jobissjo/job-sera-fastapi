@@ -1,8 +1,11 @@
-from fastapi import  FastAPI
+from fastapi import  FastAPI, HTTPException
 from app.routes import (user, jobs,user_profile, employer,company, job_applications,
                         saved_jobs, user_notification)
 from fastapi.middleware.cors import CORSMiddleware
-
+from app.core.exception_handler import global_exception_handler, validation_exception_handler, http_exception_handler
+from fastapi.exceptions import RequestValidationError
+from fastapi.staticfiles import StaticFiles
+import os
 
 app = FastAPI()
 
@@ -20,6 +23,20 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],  
 )
+
+app.add_exception_handler(Exception,global_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
+app.add_exception_handler(HTTPException, http_exception_handler)
+
+BASE_DIR = "media"
+RESUME_DIR = os.path.join(BASE_DIR, 'resume')
+PROFILE_DIR = os.path.join(BASE_DIR, 'profile')
+
+os.makedirs(RESUME_DIR, exist_ok=True)
+os.makedirs(PROFILE_DIR, exist_ok=True)
+
+app.mount('/media/resume', StaticFiles(directory=RESUME_DIR))
+app.mount('/media/profile', StaticFiles(directory=PROFILE_DIR))
 
 @app.get('/')
 async def welcome_application():
