@@ -37,7 +37,7 @@ async def get_email(db, email: str):
 
 
 async def authenticate_user(db, username: str, password: str):
-    user = get_user(db, username)
+    user = await get_user(db, username)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -75,7 +75,7 @@ async def get_current_user(
     except JWTError:
         raise credential_exception
 
-    user = get_user(db, username=token_data.username)
+    user = await get_user(db, username=token_data.username)
     if user is None:
         raise credential_exception
     return user

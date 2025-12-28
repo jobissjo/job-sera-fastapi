@@ -16,7 +16,7 @@ class User(Base):
     active = Column(Boolean, default=True)
     role = Column(String, default="user")
     is_deleted = Column(Boolean, default=False)
-    profile = relationship("UserProfile", back_populates="user", uselist=False)
+    user_profile = relationship("UserProfile", back_populates="user", uselist=False)
 
 class TempOTP(Base):
     __tablename__ = "temp_otp"
