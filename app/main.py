@@ -6,6 +6,7 @@ from app.core.exception_handler import global_exception_handler, validation_exce
 from fastapi.exceptions import RequestValidationError
 from fastapi.staticfiles import StaticFiles
 import os
+from app.mcp_servers import mcp
 
 app = FastAPI()
 
@@ -52,5 +53,8 @@ app.include_router(saved_jobs.router)
 app.include_router(user_notification.router)
 
 # Base.metadata.create_all(bind=engine)
+
+
+app.mount("/mcp", mcp)
 
 
